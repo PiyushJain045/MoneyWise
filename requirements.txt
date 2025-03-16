@@ -1,0 +1,11 @@
+django
+pandas 
+numpy 
+matplotlib 
+seaborn 
+google-generativeai
+django-allauth
+scikit-learn
+celery
+redis
+# htmx //<script src="https://unpkg.com/htmx.org@1.9.6"></script>

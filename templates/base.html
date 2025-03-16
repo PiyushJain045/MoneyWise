@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django Allauth{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/overright.css' %}">
+</head>
+<body>
+    <nav>
+        <a href="{% url 'account_login' %}">Login</a> | 
+        <a href="{% url 'account_signup' %}">Signup</a> | 
+        <a href="{% url 'account_logout' %}">Logout</a>
+    </nav>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
