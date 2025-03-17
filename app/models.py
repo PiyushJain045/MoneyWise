@@ -56,7 +56,7 @@ class Transaction(models.Model):
         Returns transactions for the last 6 months.
         """
         return cls.get_last_n_months_transactions(6)
-
+#######################################################
     @classmethod
     def filter_by_category(cls, category):
         """

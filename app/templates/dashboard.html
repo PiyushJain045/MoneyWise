@@ -18,7 +18,61 @@
     </style>
 </head>
 <body>
-    <h1>Graphs</h1>
+
+    <form method="POST" action="{% url 'dashboard' %}">
+        {% csrf_token %}
+        <label for="time_range">Select Time Range:</label>
+        <select name="n" id="time_range">
+            <option value="7">Last 7 Days</option>
+            <option value="30" selected>Last 30 Days</option>
+            <option value="90">Last 3 Months</option>
+            <option value="180">Last 6 Months</option>
+        </select>
+    
+        <label for="time_unit">Select Unit:</label>
+        <select name="unit" id="time_unit">
+            <option value="days" selected>Days</option>
+            <option value="months">Months</option>
+        </select>
+    
+        <button type="submit">Update Graph</button>
+    </form>
+    
+     <!-- Graph 1: Spending Trend -->
+     <h2>Spending Trend</h2>
+     {% if trend_graph %}
+         <img src="data:image/png;base64,{{ trend_graph }}" alt="Spending Trend Graph" />
+     {% else %}
+         <p>No data available for the selected period.</p>
+     {% endif %}
+ 
+     <!-- Graph 2: Expense Breakdown (Pie Chart) -->
+     <h2>Expense Breakdown by Category</h2>
+     {% if pie_chart %}
+         <img src="data:image/png;base64,{{ pie_chart }}" alt="Expense Category Pie Chart" />
+     {% else %}
+         <p>No expense data available for the selected period.</p>
+     {% endif %}
+
+     <!-- Graph 3: Income vs Expense Bar Chart -->
+    <h2>Income vs Expense</h2>
+    {% if income_expense_chart %}
+        <img src="data:image/png;base64,{{ income_expense_chart }}" alt="Income vs Expense Chart" />
+    {% else %}
+        <p>No income or expense data available.</p>
+    {% endif %}
+
+    <!-- Graph 4: Top 5 Expenses (Donut Chart) -->
+    <h2>Top 5 Expenses</h2>
+    {% if top_expenses_chart %}
+        <img src="data:image/png;base64,{{ top_expenses_chart }}" alt="Top 5 Expenses Donut Chart" />
+    {% else %}
+        <p>No top expenses available.</p>
+    {% endif %}
+
+
+    <!-- Recent 7 Transactions -->
+    <a href="{% url 'add-transaction' %}">Add Transaction</a>
 
     <!-- Display success message if it exists -->
     {% if success %}
@@ -33,5 +87,8 @@
             {{ error }}
         </div>
     {% endif %}
+
+
+
 </body>
 </html>
