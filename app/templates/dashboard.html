@@ -19,6 +19,38 @@
 </head>
 <body>
 
+    <div>
+        <a href="{% url 'home' %}" class="nav-link">Home</a>
+    </div>
+
+    <!-- Financial Overview -->
+    <h2>Financial Overview</h2>
+
+    {% if estimate_data %}
+        <p><strong>Current Balance:</strong> ₹{{ estimate_data.current_balance|floatformat:2 }}</p>
+        <p><strong>Average Monthly Income:</strong> ₹{{ estimate_data.avg_monthly_income|floatformat:2 }}</p>
+        <p><strong>Average Monthly Expense:</strong> ₹{{ estimate_data.avg_monthly_expense|floatformat:2 }}</p>
+        <p style="color: {{ estimate_data.net_color }}; font-weight: bold;">
+            {{ estimate_data.net_report }}
+        </p>
+    {% else %}
+        <p>Unable to load estimate data.</p>
+    {% endif %}
+
+    <!-- Monthly budget -->
+    <h2>Monthly Budget</h2>
+
+    {% if budget_data %}
+        <p><strong>Your Monthly Budget:</strong> ₹{{ monthly_budget|floatformat:2 }}</p>
+        <p><strong>Total Expense So Far:</strong> ₹{{ budget_data.total_expense|floatformat:2 }}</p>
+        <p><strong>Daily Spending Limit:</strong> ₹{{ budget_data.daily_spending_limit|floatformat:2 }} per day</p>
+        
+        <img src="data:image/png;base64,{{ budget_data.budget_progress_image }}" alt="Budget Progress" />
+    {% else %}
+        <p>Unable to load budget data.</p>
+    {% endif %}
+    
+
     <form method="POST" action="{% url 'dashboard' %}">
         {% csrf_token %}
         <label for="time_range">Select Time Range:</label>
@@ -73,6 +105,37 @@
 
     <!-- Recent 7 Transactions -->
     <a href="{% url 'add-transaction' %}">Add Transaction</a>
+
+    {% if recent_transactions %}
+    <table border="1" width="100%" style="border-collapse: collapse; text-align: center;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Recipient</th>
+                <th>Transaction Amount</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in recent_transactions %}
+                <tr>
+                    <td>{{ transaction.date }}</td>
+                    <td>{{ transaction.recipient }}</td>
+                    <td>
+                        {% if transaction.type == "CR" %}
+                            <span style="color: green;">+₹{{ transaction.transaction_amount }}</span>
+                        {% else %}
+                            <span style="color: red;">-₹{{ transaction.transaction_amount }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ transaction.category }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No recent transactions found.</p>
+{% endif %}
 
     <!-- Display success message if it exists -->
     {% if success %}

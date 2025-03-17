@@ -15,7 +15,11 @@ from django.utils import timezone
 
 #Utils functions
 from .utils.data_processing import clean_bank_statements  # Import CSV processing
-from .utils.visualization import trend_line_graph, expense_category_pie_chart, income_vs_expense_bar_chart,top_5_expenses_donut_chart  # Import graph function (generate_expense_pie_chart)
+from .utils.visualization import (
+    trend_line_graph, expense_category_pie_chart,
+    income_vs_expense_bar_chart, top_5_expenses_donut_chart, 
+    monthly_budget_visualization, estimate_section
+)  
 
 # Imports for Environment Variable
 import os
@@ -37,6 +41,15 @@ class Dashboard(View):
     def get(self, request):
         print("Inside GET dashboard")
 
+
+        ### ESTIMATE SECTION
+        estimate_data = estimate_section()
+
+        ### MONTHLY BUDGET SECTION ###
+        monthly_budget_target = 16000  # This will later come from the database
+        budget_data = monthly_budget_visualization(monthly_budget_target)
+
+
         # Generate the trend line graph default for GET request
         n = 30
         time_unit = 'days'
@@ -50,6 +63,8 @@ class Dashboard(View):
             if days_of_data < 30:
                 return render(request, "dashboard.html", {"error": "Not enough data available (Requires at least 30 days of transactions)."})
 
+        
+        ### GRAPHS SECTION ###
         #graph 1: trend line graph
         trend_graph = trend_line_graph(n, time_unit)
         # Graph 2: Expense by Category (Pie Chart)
@@ -59,14 +74,31 @@ class Dashboard(View):
         # Graph 4: Top 5 Expenses Donut Chart
         top_expenses_chart = top_5_expenses_donut_chart(n, time_unit)
 
+        
+        ### RECENT TRANSACTION SECTION ###
+        # Fetch recent 7 transactions (ordered by date descending)
+        recent_transactions = Transaction.objects.order_by("-date")[:7]
+
         return render(request, "dashboard.html", {
+            "estimate_data": estimate_data,
             "trend_graph": trend_graph,
             "pie_chart": pie_chart,
             "income_expense_chart": income_expense_chart,
-            "top_expenses_chart": top_expenses_chart
+            "top_expenses_chart": top_expenses_chart,
+            "recent_transactions": recent_transactions,
+            "budget_data": budget_data,
+            "monthly_budget": monthly_budget_target,
         })
 
     def post(self, request):
+
+        ### ESTIMATE SECTION
+        estimate_data = estimate_section()
+
+        ### MONTHLY BUDGET SECTION ###
+        monthly_budget_target = 16000  # This will later come from the database
+        budget_data = monthly_budget_visualization(monthly_budget_target)
+
         n = int(request.POST.get("n", 30))  # 30 days default
         time_unit = request.POST.get("unit", "days")  # 30 days default
 
@@ -85,13 +117,17 @@ class Dashboard(View):
         top_expenses_chart = top_5_expenses_donut_chart(n, time_unit)
 
         # Recent 7 transactions
-        
+        recent_transactions = Transaction.objects.order_by("-date")[:7]
 
         return render(request, "dashboard.html", {
+            "estimate_data": estimate_data,
             "trend_graph": trend_graph,
             "pie_chart": pie_chart,
             "income_expense_chart": income_expense_chart,
-            "top_expenses_chart": top_expenses_chart
+            "top_expenses_chart": top_expenses_chart,
+             "recent_transactions": recent_transactions,
+             "budget_data": budget_data,
+             "monthly_budget": monthly_budget_target,
         })
 
 

@@ -1,6 +1,11 @@
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use("Agg")  # Prevents GUI issues
 import pandas as pd
 import seaborn as sns
+
+from datetime import datetime, timedelta
+
 from io import BytesIO
 import base64
 from app.models import Transaction  # Import your model
@@ -278,4 +283,127 @@ def top_5_expenses_donut_chart(n, time_unit="days"):
 
     except Exception as e:
         print(f"❌ Error generating top 5 transactions donut chart: {e}")
+        return None
+    
+
+# Monthly budget transaction
+def monthly_budget_visualization(monthly_budget_target=10000):
+    """
+    Generates monthly budget statistics and a progress bar visualization.
+
+    :param monthly_budget_target: User-defined budget goal (Default: 10,000)
+    :return: Dictionary containing expense summary and a base64-encoded image
+    """
+    try:
+        # Get the first and last day of the current month
+        today = datetime.today()
+        first_day = today.replace(day=1)
+        last_day = (first_day.replace(month=first_day.month % 12 + 1, day=1) - timedelta(days=1)).date()
+
+        # Fetch transactions within the current month
+        transactions = Transaction.objects.filter(date__gte=first_day, date__lte=today, type="DR")
+
+        # Convert QuerySet to DataFrame
+        df = pd.DataFrame(list(transactions.values("transaction_amount")))
+
+        # Calculate total expense so far
+        total_expense = df["transaction_amount"].sum() if not df.empty else 0
+
+        # Calculate budget used percentage
+        budget_used = (total_expense / monthly_budget_target) * 100
+        budget_used = min(budget_used, 100)  # Ensure it doesn't exceed 100%
+
+        # Calculate daily spending limit to stay within budget
+        remaining_budget = max(monthly_budget_target - total_expense, 0)
+        remaining_days = (last_day - today.date()).days
+        daily_spending_limit = remaining_budget / remaining_days if remaining_days > 0 else 0
+
+        # Generate Progress Bar (Budget Usage)
+        plt.figure(figsize=(8, 1))
+        plt.barh([""], [budget_used], color="red", height=0.5, label="Used Budget")
+        plt.barh([""], [100 - budget_used], left=[budget_used], color="green", height=0.5, label="Remaining Budget")
+        plt.xlim(0, 100)
+        plt.xticks([])
+        plt.yticks([])
+        plt.legend(loc="upper right")
+        plt.title(f"Budget Used: {budget_used:.1f}% | Remaining: {100 - budget_used:.1f}%")
+
+        # Convert plot to Base64 image
+        buffer = BytesIO()
+        plt.savefig(buffer, format="png", bbox_inches="tight")
+        buffer.seek(0)
+        budget_progress_image = base64.b64encode(buffer.getvalue()).decode("utf-8")
+        plt.close()
+
+        return {
+            "total_expense": total_expense,
+            "budget_used": budget_used,
+            "daily_spending_limit": daily_spending_limit,
+            "budget_progress_image": budget_progress_image,
+        }
+
+    except Exception as e:
+        print(f"❌ Error generating monthly budget visualization: {e}")
+        return None
+    
+
+### Esimate Section
+def estimate_section():
+    """
+    Computes financial estimates including current balance, average monthly income, and expenses.
+
+    :return: Dictionary containing the estimate data
+    """
+    try:
+        # 1️⃣ Current Balance (from the most recent transaction)
+        latest_transaction = Transaction.objects.order_by("-date").first()
+        current_balance = latest_transaction.balance_amount if latest_transaction else 0
+
+        # Fetch all transactions
+        transactions = Transaction.objects.all()
+
+        if not transactions.exists():
+            return {
+                "current_balance": current_balance,
+                "avg_monthly_income": 0,
+                "avg_monthly_expense": 0,
+                "net_report": "No data available",
+                "net_color": "black",
+            }
+
+        # Convert QuerySet to DataFrame
+        df = pd.DataFrame(list(transactions.values("date", "transaction_amount", "type")))
+
+        # Convert date column to datetime
+        df["date"] = pd.to_datetime(df["date"])
+
+        # Extract year and month for grouping
+        df["year_month"] = df["date"].dt.to_period("M")
+
+        # 2️⃣ Calculate Average Monthly Income (Credit)
+        income_df = df[df["type"] == "CR"].groupby("year_month")["transaction_amount"].sum()
+        avg_monthly_income = income_df.mean() if not income_df.empty else 0
+
+        # 3️⃣ Calculate Average Monthly Expense (Debit)
+        expense_df = df[df["type"] == "DR"].groupby("year_month")["transaction_amount"].sum()
+        avg_monthly_expense = expense_df.mean() if not expense_df.empty else 0
+
+        # 4️⃣ Determine Net Report
+        if avg_monthly_expense > avg_monthly_income:
+            net_report = f"⚠️ You are overspending by ₹{avg_monthly_expense - avg_monthly_income:.2f}"
+            net_color = "red"
+        else:
+            net_report = f"✅ You are saving ₹{avg_monthly_income - avg_monthly_expense:.2f} per month"
+            net_color = "green"
+
+        return {
+            "current_balance": current_balance,
+            "avg_monthly_income": avg_monthly_income,
+            "avg_monthly_expense": avg_monthly_expense,
+            "net_report": net_report,
+            "net_color": net_color,
+        }
+
+    except Exception as e:
+        print(f"❌ Error generating estimate section: {e}")
         return None
