@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recurring Payments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 20px;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .message {
+            text-align: center;
+            font-size: 18px;
+            color: #ff0000;
+        }
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .payment-table th, .payment-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .payment-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .payment-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .form-container {
+            margin-top: 30px;
+        }
+        .form-container label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .form-container input, .form-container select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .form-container button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Recurring Payments</h2>
+
+        {% if message %}
+            <p class="message">{{ message }}</p>
+        {% else %}
+            <table class="payment-table">
+                <tr>
+                    <th>Name</th>
+                    <th>Amount (₹)</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Payment Date</th>
+                </tr>
+                {% for payment in recurring_payments %}
+                    <tr>
+                        <td>{{ payment.name }}</td>
+                        <td>{{ payment.amount }}</td>
+                        <td>{{ payment.category }}</td>
+                        <td>{{ payment.get_type_display }}</td>  <!-- DR/CR -->
+                        <td>{{ payment.date }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+        <!-- 🔹 Add Recurring Payment Form -->
+        <div class="form-container">
+            <h2>Add a Recurring Payment</h2>
+            <form method="POST" action="{% url 'recurring' %}">
+                {% csrf_token %}
+                <label for="name">Payment Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="amount">Amount (₹):</label>
+                <input type="number" id="amount" name="amount" step="0.01" required>
+
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="" disabled selected>-- Select a Category --</option>
+                    <option value="Food & Dining">Food & Dining</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Banking & Transfers">Banking & Transfers</option>
+                    <option value="Utilities & Bills">Utilities & Bills</option>
+                    <option value="Health & Fitness">Health & Fitness</option>
+                    <option value="Education">Education</option>
+                    <option value="Rent & Housing">Rent & Housing</option>
+                    <option value="Friend/Family">Friend/Family</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="type">Transaction Type:</label>
+                <select id="type" name="type" required>
+                    <option value="DR">Debit</option>
+                    <option value="CR">Credit</option>
+                </select>
+
+                <label for="date">Payment Day (1-31):</label>
+                <input type="number" id="date" name="date" min="1" max="31" required>
+
+                <button type="submit">Add Payment</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -11,5 +11,6 @@ urlpatterns = [
     path('Finacial Report', views.FinancialReport.as_view(), name='financial-report'),
     path('AI Receipt', views.AiReceipt.as_view(), name='ai-receipt'),
     path('Profile', views.ProfileSection.as_view(), name='profile'),
+    path('Recurring Payment', views.RecurringPayments.as_view(), name='recurring'),
     path("onboarding/", views.OnBoarding, name="onboarding"),
 ]

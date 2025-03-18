@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
-from .models import Transaction, Profile, UserAccount, MonthlyBudget 
+from .models import Transaction, Profile, UserAccount, MonthlyBudget, RecurringPayment
 from django.contrib import messages
 
 
@@ -476,5 +476,41 @@ def OnBoarding(request):
         print("Data stored successfully")
         messages.success(request, "Onboarding completed successfully!")
         return redirect('home')
+    
+
+class RecurringPayments(View):
+    def get(self, request):
+        print("INSIDE RECURRING GET")
+        user = request.user  # Get the logged-in user
+        recurring_payments = RecurringPayment.objects.filter(user=user)  # Fetch user's recurring payments
+
+        if not recurring_payments.exists():
+            message = "No recurring payments"
+            return render(request, "recurrning.html", {"message": message})
+
+        return render(request, "recurrning.html", {"recurring_payments": recurring_payments})
+
+    def post(self, request):
+        print("INSIDE RECURRING POST")
+        name = request.POST.get("name")
+        amount = request.POST.get("amount")
+        category = request.POST.get("category")
+        payment_type = request.POST.get("type")  # DR (Debit) or CR (Credit)
+        date = request.POST.get("date")
+
+        print(name, amount, category, payment_type, date)
+
+        RecurringPayment.objects.create(
+            user=request.user,  # Associate with logged-in user
+            name=name,
+            amount=amount,
+            category=category,
+            type=payment_type,
+            date=date
+        )
+
+        print("Recurring payment saved successfully!")
+
+        return redirect('recurring')
 
     

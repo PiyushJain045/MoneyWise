@@ -105,3 +105,19 @@ class Transaction(models.Model):
         """
         return cls.get_last_n_months_transactions(6)
 #######################################################
+
+# model 5
+class RecurringPayment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Links to User model
+    name = models.CharField(max_length=255, null=False, blank=False)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)
+    category = models.CharField(max_length=255, null=False, blank=False)
+    type = models.CharField(max_length=2, choices=[('DR', 'Debit'), ('CR', 'Credit')], null=False, blank=False)
+    date = models.PositiveIntegerField(
+        choices=[(i, f"Day {i}") for i in range(1, 29)],  # Limits to 1-28 to avoid issues with shorter months
+        null=False,
+        blank=False
+    )
+
+    def __str__(self):
+        return f"{self.name} - {self.type} - ₹{self.amount} on Day {self.date}"
