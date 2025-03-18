@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding</title>
+    <style>
+        .error { color: red; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <h2>Onboarding - Complete Your Profile</h2>
+
+    <form id="onboardingForm" method="POST" action="{% url 'onboarding' %}" enctype="multipart/form-data" onsubmit="return validateForm()">
+        {% csrf_token %}
+
+        <!-- ✅ Profile Section -->
+        <h3>Profile Information</h3>
+
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required>
+        <span class="error" id="nameError"></span>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" min="18" max="100" required>
+        <span class="error" id="ageError"></span>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" maxlength="10" required>
+        <span class="error" id="phoneError"></span>
+
+        <label for="profession">Profession:</label>
+        <select id="profession" name="profession" required>
+            <option value="">-- Select Profession --</option>
+            <option value="Businessman">Businessman</option>
+            <option value="Employee">Employee</option>
+            <option value="Student">Student</option>
+            <option value="Housewife">Housewife</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="profile_photo">Profile Photo (Optional):</label>
+        <input type="file" id="profile_photo" name="profile_photo" accept="image/*">
+
+        <!-- ✅ Bank Account Section -->
+        <h3>Bank Account Details</h3>
+
+        <label for="account_name">Account Name:</label>
+        <input type="text" id="account_name" name="account_name" required>
+
+        <label for="account_type">Account Type:</label>
+        <select id="account_type" name="account_type" required>
+            <option value="">-- Select Account Type --</option>
+            <option value="Current">Current</option>
+            <option value="Savings">Savings</option>
+        </select>
+
+        <label for="current_balance">Current Balance (₹):</label>
+        <input type="number" id="current_balance" name="current_balance" min="0" step="0.01" placeholder="Or let AI detect it">
+        <span class="error" id="balanceError"></span>
+
+        <!-- ✅ Monthly Budget Section -->
+        <h3>Monthly Budget</h3>
+
+        <label for="monthly_budget">Set Your Monthly Budget (₹):</label>
+        <input type="number" id="monthly_budget" name="monthly_budget" min="1000" step="0.01" required>
+        <span class="error" id="budgetError"></span>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        function validateForm() {
+            let valid = true;
+
+            // ✅ Validate Name (No numbers or special characters)
+            let name = document.getElementById("name").value;
+            let nameError = document.getElementById("nameError");
+            if (!/^[a-zA-Z\s]+$/.test(name)) {
+                nameError.textContent = "Name should only contain letters and spaces.";
+                valid = false;
+            } else {
+                nameError.textContent = "";
+            }
+
+            // ✅ Validate Age (18-100)
+            let age = document.getElementById("age").value;
+            let ageError = document.getElementById("ageError");
+            if (age < 18 || age > 100) {
+                ageError.textContent = "Age must be between 18 and 100.";
+                valid = false;
+            } else {
+                ageError.textContent = "";
+            }
+
+            // ✅ Validate Phone Number (10 digits)
+            let phone = document.getElementById("phone").value;
+            let phoneError = document.getElementById("phoneError");
+            if (!/^\d{10}$/.test(phone)) {
+                phoneError.textContent = "Phone number must be exactly 10 digits.";
+                valid = false;
+            } else {
+                phoneError.textContent = "";
+            }
+
+            // ✅ Validate Current Balance (No negative values)
+            let balance = document.getElementById("current_balance").value;
+            let balanceError = document.getElementById("balanceError");
+            if (balance < 0) {
+                balanceError.textContent = "Balance cannot be negative.";
+                valid = false;
+            } else {
+                balanceError.textContent = "";
+            }
+
+            // ✅ Validate Monthly Budget (Min ₹1000)
+            let budget = document.getElementById("monthly_budget").value;
+            let budgetError = document.getElementById("budgetError");
+            if (budget < 1000) {
+                budgetError.textContent = "Budget must be at least ₹1000.";
+                valid = false;
+            } else {
+                budgetError.textContent = "";
+            }
+
+            return valid;
+        }
+    </script>
+
+</body>
+</html>

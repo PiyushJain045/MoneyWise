@@ -28,8 +28,18 @@
     <div>
         <a href="#" class="nav-link">Stock Tracker</a>
     </div>
-
+    <div>
+        <a href="{% url 'add-statements' %}" class="nav-link">Add Statements</a>
+    </div>
+    <div>
+        <a href="{% url 'profile' %}" class="nav-link">Profile</a>
+    </div>
     <!-- Financial Overview -->
+
+    <h1>Account Name: {{ account_name }} </h1>
+    <h4>Account Type: {{ account_type }} </h4>
+
+
     <h2>Financial Overview</h2>
 
     {% if estimate_data %}

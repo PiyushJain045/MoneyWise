@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        .error { color: red; font-size: 14px; }
+    </style>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+
+
+</head>
+<body>
+    <div>
+        <a href="{% url 'home' %}" class="nav-link">Home</a>
+    </div>
+
+    <div class="edit">
+        <h2>Your Profile</h2>
+
+        <!-- ✅ Profile Section -->
+        <h3>Profile Information</h3>
+        <p><strong>Name:</strong> {{ user_profile.name }}</p>
+        <p><strong>Age:</strong> {{ user_profile.age }}</p>
+        <p><strong>Email:</strong> {{ user_profile.email }}</p>
+        <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
+        <p><strong>Profession:</strong> {{ user_profile.profession }}</p>
+        {% if user_profile.profile_photo %}
+            <p><strong>Profile Photo:</strong></p>
+            <img src="{{ user_profile.profile_photo }}" alt="Profile Photo" width="150">
+        {% else %}
+            <p><strong>Profile Photo:</strong> No Photo Available</p>
+        {% endif %}
+
+        <!-- ✅ Bank Account Section -->
+        <h3>Bank Account Details</h3>
+        <p><strong>Account Name:</strong> {{ account_data.account_name }}</p>
+        <p><strong>Account Type:</strong> {{ account_data.account_type }}</p>
+        <p><strong>Current Balance:</strong> ₹{{ account_data.current_balance }}</p>
+
+        <!-- ✅ Monthly Budget Section -->
+        <h3>Monthly Budget</h3>
+        <p><strong>Monthly Budget:</strong> ₹{{ budget_data.monthly_budget }}</p>
+
+        <form>
+            {% csrf_token %}
+            <button 
+                type="button"
+                hx-post="{% url 'profile' %}" 
+                hx-target=".edit"
+                hx-swap="outerHTML"
+                hx-vals='js:profileData' 
+            >
+                Edit
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Prepare data to send via HTMX
+        var profileData = {
+            user_profile: {{ user_profile|safe }},
+            account_data: {{ account_data|safe }},
+            budget_data: {{ budget_data|safe }}
+        };
+    </script>
+</body>
+</html>

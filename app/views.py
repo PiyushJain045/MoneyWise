@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views import View
-from .models import Transaction 
+from .models import Transaction, Profile, UserAccount, MonthlyBudget 
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 #Misslaneous
-import csv
 import os
 from django.conf import settings
 from datetime import datetime
@@ -39,7 +40,9 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 
 class Home(View):
     def get(self, request):
-        return render(request, "home.html")
+        user_name = request.user
+        print(user_name)
+        return render(request, "home.html",{"username":user_name})
 
     def post(self, request):
         pass
@@ -49,12 +52,32 @@ class Dashboard(View):
     def get(self, request):
         print("Inside GET dashboard")
 
+        ### ACCOUNT DATA
+        user_account = UserAccount.objects.filter(user=request.user).first()
+
+        if user_account:
+            account_name = user_account.account_name
+            account_type = user_account.account_type
+        else:
+            account_name = "No Account Found"
+            account_type = "N/A"
+
+        print("Account Name:", account_name)
+        print("Account Type:", account_type)
 
         ### ESTIMATE SECTION
         estimate_data = estimate_section()
 
         ### MONTHLY BUDGET SECTION ###
-        monthly_budget_target = 16000  # This will later come from the database
+        try:
+            budget = MonthlyBudget.objects.get(user=request.user)
+            monthly_budget_target = budget.monthly_budget # This will later come from the database
+            print("monthly_budget_target", monthly_budget_target)
+        except MonthlyBudget.DoesNotExist:
+            monthly_budget_target = 0  # Default value if no budget is found
+            print("No budget found for the user. Setting default to ₹0.")
+
+
         budget_data = monthly_budget_visualization(monthly_budget_target)
 
 
@@ -96,17 +119,40 @@ class Dashboard(View):
             "recent_transactions": recent_transactions,
             "budget_data": budget_data,
             "monthly_budget": monthly_budget_target,
+            "account_name": account_name,
+            "account_type": account_type,
         })
 
     def post(self, request):
+
+        ### ACCOUNT DATA
+        user_account = UserAccount.objects.filter(user=request.user).first()
+
+        if user_account:
+            account_name = user_account.account_name
+            account_type = user_account.account_type
+        else:
+            account_name = "No Account Found"
+            account_type = "N/A"
+
+        print("Account Name:", account_name)
+        print("Account Type:", account_type)
 
         ### ESTIMATE SECTION
         estimate_data = estimate_section()
 
         ### MONTHLY BUDGET SECTION ###
-        monthly_budget_target = 16000  # This will later come from the database
+        try:
+            budget = MonthlyBudget.objects.get(user=request.user)
+            monthly_budget_target = budget.monthly_budget # This will later come from the database
+            print("monthly_budget_target", monthly_budget_target)
+        except MonthlyBudget.DoesNotExist:
+            monthly_budget_target = 0  # Default value if no budget is found
+            print("No budget found for the user. Setting default to ₹0.")
+        
         budget_data = monthly_budget_visualization(monthly_budget_target)
 
+        # Generate the trend line graph 
         n = int(request.POST.get("n", 30))  # 30 days default
         time_unit = request.POST.get("unit", "days")  # 30 days default
 
@@ -136,6 +182,8 @@ class Dashboard(View):
              "recent_transactions": recent_transactions,
              "budget_data": budget_data,
              "monthly_budget": monthly_budget_target,
+             "account_name": account_name,
+            "account_type": account_type,
         })
 
 
@@ -229,11 +277,11 @@ class AddTransaction(View):
           return redirect("dashboard")
      
     
-     
-
 class FinancialReport(View):
     def get(self, request):
-        report = generate_financial_report()
+
+        user = request.user 
+        report = generate_financial_report(user)
         # print(report)  # Debugging: Print report to check content
 
         prompt = f'''You are being used in a personal finance management app. Here is the financial report of a user:  
@@ -322,6 +370,114 @@ class AiReceipt(View):
             return render(request, "addTransaction.html", {"error": f"Error processing receipt: {e}"})
     
 
+class ProfileSection(View):
+    def get(self, request):
 
+        print("INSIDE PROFILE GET")
+
+        # Fetch Profile Data
+        profile = Profile.objects.filter(user=request.user).first()
+        user_profile = {
+            "name": profile.name if profile else "N/A",
+            "age": profile.age if profile else "N/A",
+            "email": profile.user.email if profile else "N/A",
+            "phone": profile.phone if profile else "N/A",
+            "profession": profile.profession if profile else "N/A",
+            "profile_photo": profile.profile_photo.url if profile and profile.profile_photo else None,
+        }
+
+        # Fetch UserAccount Data
+        user_account = UserAccount.objects.filter(user=request.user).first()
+        account_data = {
+            "account_name": user_account.account_name if user_account else "N/A",
+            "account_type": user_account.account_type if user_account else "N/A",
+            "current_balance": user_account.current_balance if user_account else 0.00,
+        }
+
+        # Fetch Monthly Budget Data
+        monthly_budget = MonthlyBudget.objects.filter(user=request.user).first()
+        budget_data = {
+            "monthly_budget": monthly_budget.monthly_budget if monthly_budget else 0.00,
+        }
+
+        # Combine data into context
+        context = {
+            "user_profile": user_profile,
+            "account_data": account_data,
+            "budget_data": budget_data,
+        }
+
+        return render(request, "profile.html", context)
+    
+    def post(self, request):
+        print("INSIDE PROFILE POST")
+
+        # Parse incoming JSON data
+        try:
+            user_profile = Profile.objects.get(user=request.user)
+            account_data = UserAccount.objects.get(user=request.user)
+            budget_data = MonthlyBudget.objects.get(user=request.user)
+
+
+            # ✅ Prepare context for the partial
+            context = {
+                "user_profile": user_profile,
+                "account_data": account_data,
+                "budget_data": budget_data,
+            }
+           
+            
+            print("Received Data:", context)
+            return render(request, "partials\edit_profile_partial.html",context)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+        
+
+
+
+def OnBoarding(request):
+    if request.method == "GET":
+        return render(request, "onBoarding.html")
+    
+    if request.method == "POST":
+        print("INSIDE ONBOARDING POST")
+        print("Form Data:", request.POST)
+
+        name = request.POST.get("name")
+        age = int(request.POST.get("age"))
+        print("Age:", age)
+        phone = request.POST.get("phone")
+        profession = request.POST.get("profession")
+        account_name = request.POST.get("account_name")
+        account_type = request.POST.get("account_type")
+        current_balance = request.POST.get("current_balance")
+        monthly_budget = request.POST.get("monthly_budget")
+        profile_photo = request.FILES.get("profile_photo")  # ✅ Handle Image Upload
+
+        # ✅ Step 2: Save Profile Data
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        profile.name = name
+        profile.age = age
+        profile.phone = phone
+        profile.profession = profession
+        if profile_photo:
+            profile.profile_photo = profile_photo
+        profile.save()
+
+        # ✅ Step 3: Save or Update UserAccount Data
+        account, created = UserAccount.objects.get_or_create(user=request.user)
+        account.account_name = account_name
+        account.account_type = account_type
+        account.current_balance = current_balance
+        account.save()
+
+        # ✅ Step 4 : Save or Update Monthly Budget
+        budget, created = MonthlyBudget.objects.get_or_create(user=request.user)
+        budget.monthly_budget = monthly_budget
+        budget.save()
+
+        print("Data stored successfully")
+        messages.success(request, "Onboarding completed successfully!")
+        return redirect('home')
 
     

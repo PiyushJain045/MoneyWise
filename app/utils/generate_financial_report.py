@@ -1,4 +1,4 @@
-from app.models import Transaction # UserProfile
+from app.models import Transaction, Profile# UserProfile
 import pandas as pd
 from datetime import datetime
 
@@ -7,7 +7,7 @@ from app.models import Transaction
 import pandas as pd
 from datetime import datetime
 
-def generate_financial_report():
+def generate_financial_report(user):
     """
     Generates a text-based financial report without requiring user authentication.
 
@@ -15,8 +15,9 @@ def generate_financial_report():
     """
     try:
         # Hardcoded user details (later can be fetched dynamically)
-        age = 21
-        profession = "Student"
+        profile = Profile.objects.get(user=user)
+        age = profile.age
+        profession = profile.profession
         country = "India"
 
         user_details = f"User Profile:\n- Age: {age}\n- Profession: {profession}\n- Country: {country}\n"

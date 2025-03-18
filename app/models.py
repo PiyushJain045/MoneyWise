@@ -1,6 +1,54 @@
 from django.db import models
+from django.contrib.auth.models import User 
 from django.utils import timezone
 from datetime import timedelta
+
+### 📌 Model 1: Profile (User Details)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Links to Django's User model
+    name = models.CharField(max_length=255, null=False, blank=False)
+    age = models.PositiveIntegerField(null=True, blank=True)
+    email = models.EmailField(unique=True)  # Automatically fetched from User model
+    phone = models.CharField(max_length=15, unique=True, null=False, blank=False)
+    profession = models.CharField(
+        max_length=20,
+        choices=[
+            ("Businessman", "Businessman"),
+            ("Employee", "Employee"),
+            ("Student", "Student"),
+            ("Housewife", "Housewife"),
+            ("Other", "Other"),
+        ],
+        null=False,
+        blank=False,
+    )
+    profile_photo = models.ImageField(upload_to="profile_photos/", null=True, blank=True)  # Optional
+
+    def __str__(self):
+        return self.name
+    
+### 📌 Model 2: UserAccount (Bank Account Info)
+class UserAccount(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Links to Django's User model
+    account_name = models.CharField(max_length=255, null=False, blank=False)
+    account_type = models.CharField(
+        max_length=10,
+        choices=[("Current", "Current"), ("Savings", "Savings")],
+        null=False,
+        blank=False,
+    )
+    current_balance = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.account_name} - {self.account_type}"
+    
+### 📌 Model 3: MonthlyBudget
+class MonthlyBudget(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Links to Django's User model
+    monthly_budget = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Monthly Budget: ₹{self.monthly_budget}"
 
 class Transaction(models.Model):
     date = models.DateField()
