@@ -105,23 +105,3 @@ class Transaction(models.Model):
         """
         return cls.get_last_n_months_transactions(6)
 #######################################################
-    @classmethod
-    def filter_by_category(cls, category):
-        """
-        Filters transactions by category.
-        """
-        return cls.objects.filter(category=category)
-
-    @classmethod
-    def filter_by_type(cls, transaction_type):
-        """
-        Filters transactions by type (DR or CR).
-        """
-        return cls.objects.filter(type=transaction_type)
-
-    @classmethod
-    def filter_by_recipient(cls, recipient):
-        """
-        Filters transactions by recipient.
-        """
-        return cls.objects.filter(recipient__icontains=recipient)

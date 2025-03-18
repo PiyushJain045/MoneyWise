@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "app",
+    "stock_tracker_app",
 
     'allauth',
     'allauth.account',

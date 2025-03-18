@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
 from .models import Transaction, Profile, UserAccount, MonthlyBudget 
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 
@@ -287,8 +286,8 @@ class FinancialReport(View):
         prompt = f'''You are being used in a personal finance management app. Here is the financial report of a user:  
         {report}  
 
-        Based on this, provide financial advice in a friendly manner. Use point format and keep it minimal.  
-        If the user is financially stable, mention the 'Stock Tracking' feature.'''  
+        Based on this, provide financial advice(in a well formated manner). analuze the profile throughly and provide some great caring advice based on their age,country and profession.  
+        If the user ends up saving some money, also provide advice where they can invest this money based on the saved amount. Also recommend the 'Stock Tracking' feature. of our app if needed. And finally dont include markdown. just give simple text'''  
 
         try:
             # Ask Gemini for Advice

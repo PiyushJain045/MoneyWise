@@ -4,19 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page</title>
+    <link rel="stylesheet" href="static\css\home.css">
 </head>
 <body>
-
-    {% if user.is_authenticated %}
-        <p>Welcome, {{ user.username }}!</p>
-        <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
-        <a href="{% url 'add-statements' %}" class="nav-link">Add Statements</a>
-       <!----> <a href="{% url 'account_logout' %}" class="nav-link">Logout</a>  <!-- Django Allauth Logout -->
-    
-    {% else %}
-        <a href="{% url 'account_login' %}" class="nav-link">Login</a>  <!-- Django Allauth Login -->
-        <a href="{% url 'account_signup' %}" class="nav-link">Sign Up</a>  <!-- Django Allauth Signup -->
-    {% endif %}
-
+    <div class="landing-container">
+        {% if user.is_authenticated %}
+            <p class="welcome-message">Welcome, {{ user.username }}!</p>
+            <div class="nav-links">
+                <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                <a href="{% url 'add-statements' %}" class="nav-link">Add Statements</a>
+                <a href="{% url 'account_logout' %}" class="nav-link">Logout</a>
+            </div>
+        {% else %}
+            <div class="nav-links">
+                <a href="{% url 'account_login' %}" class="nav-link">Login</a>
+                <a href="{% url 'account_signup' %}" class="nav-link">Sign Up</a>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>

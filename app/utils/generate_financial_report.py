@@ -63,16 +63,16 @@ def generate_financial_report(user):
 
         # Generate Report
         report = f"""
-        📊 **Financial Health Report** - {datetime.today().strftime('%Y-%m-%d')}
+        📊 Financial Health Report - {datetime.today().strftime('%Y-%m-%d')}
         
         {user_details}
         
-        💰 **Current Balance:** ₹{current_balance:.2f}
-        💵 **Average Monthly Income:** ₹{avg_monthly_income:.2f}
-        📉 **Average Monthly Expenses:** ₹{avg_monthly_expense:.2f}
-        💡 **Savings Potential:** ₹{savings_potential:.2f} ({savings_status})
-        🛒 **Biggest Expense Last Month:** ₹{top_expense_category}
-        🏆 **Overall Financial Status:** {'✅ Stable' if savings_potential > 0 else '❗ At Risk'}
+        💰 Current Balance: ₹{current_balance:.2f}
+        💵 Average Monthly Income: ₹{avg_monthly_income:.2f}
+        📉 Average Monthly Expenses: ₹{avg_monthly_expense:.2f}
+        💡 Savings Potential: ₹{savings_potential:.2f} ({savings_status})
+        🛒 Biggest Expense Last Month: ₹{top_expense_category}
+        🏆 Overall Financial Status: {'✅ Stable' if savings_potential > 0 else '❗ At Risk'}
 
         """
 

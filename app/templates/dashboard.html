@@ -16,23 +16,17 @@
             margin: 10px 0;
         }
     </style>
+
+    <link rel="stylesheet" href="static\css\onBoarding.css">
 </head>
 <body>
 
-    <div>
-        <a href="{% url 'home' %}" class="nav-link">Home</a>
-    </div>
-    <div>
-        <a href="{% url 'financial-report' %}" class="nav-link">Finacial Report</a>
-    </div>
-    <div>
-        <a href="#" class="nav-link">Stock Tracker</a>
-    </div>
-    <div>
-        <a href="{% url 'add-statements' %}" class="nav-link">Add Statements</a>
-    </div>
-    <div>
-        <a href="{% url 'profile' %}" class="nav-link">Profile</a>
+    <div class="nav-container">
+        <a href="{% url 'home' %}" class="nav-link" id="home-link">Home</a>
+        <a href="{% url 'financial-report' %}" class="nav-link" id="finance-link">Financial Report</a>
+        <a href="{% url 'st_homepage' %}" class="nav-link" id="stock-link">Stock Tracker</a>
+        <a href="{% url 'add-statements' %}" class="nav-link" id="add-link">Add Statements</a>
+        <a href="{% url 'profile' %}" class="nav-link" id="profile-link">Profile</a>
     </div>
     <!-- Financial Overview -->
 
@@ -67,23 +61,27 @@
     {% endif %}
     
 
-    <form method="POST" action="{% url 'dashboard' %}">
+    <form method="POST" action="{% url 'dashboard' %}" class="filter-form">
         {% csrf_token %}
-        <label for="time_range">Select Time Range:</label>
-        <select name="n" id="time_range">
-            <option value="7">Last 7 Days</option>
-            <option value="30" selected>Last 30 Days</option>
-            <option value="90">Last 3 Months</option>
-            <option value="180">Last 6 Months</option>
-        </select>
+        <div class="form-group">
+            <label for="time_range">Select Time Range:</label>
+            <select name="n" id="time_range" class="form-select">
+                <option value="7">Last 7 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="90">Last 3 Months</option>
+                <option value="180">Last 6 Months</option>
+            </select>
+        </div>
     
-        <label for="time_unit">Select Unit:</label>
-        <select name="unit" id="time_unit">
-            <option value="days" selected>Days</option>
-            <option value="months">Months</option>
-        </select>
+        <div class="form-group">
+            <label for="time_unit">Select Unit:</label>
+            <select name="unit" id="time_unit" class="form-select">
+                <option value="days" selected>Days</option>
+                <option value="months">Months</option>
+            </select>
+        </div>
     
-        <button type="submit">Update Graph</button>
+        <button type="submit" class="form-button">Update Graph</button>
     </form>
     
      <!-- Graph 1: Spending Trend -->
@@ -120,7 +118,19 @@
 
 
     <!-- Recent 7 Transactions -->
-    <a href="{% url 'add-transaction' %}">Add Transaction</a>
+    <a href="{% url 'add-transaction' %}" 
+   style="display: inline-block; 
+          padding: 10px 20px; 
+          background: linear-gradient(135deg, #6a11cb, #2575fc); 
+          color: #fff; 
+          text-decoration: none; 
+          border-radius: 25px; 
+          font-size: 1em; 
+          font-weight: 500; 
+          transition: transform 0.3s ease, box-shadow 0.3s ease; 
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    Add Transaction
+</a>
 
     {% if recent_transactions %}
     <table border="1" width="100%" style="border-collapse: collapse; text-align: center;">
