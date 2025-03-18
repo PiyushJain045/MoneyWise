@@ -431,8 +431,6 @@ class ProfileSection(View):
             return render(request, "partials\edit_profile_partial.html",context)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
-        
-
 
 
 def OnBoarding(request):
