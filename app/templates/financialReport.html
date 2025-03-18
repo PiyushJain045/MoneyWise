@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finacial Report</title>
+</head>
+<body>
+    <div>
+        <a href="{% url 'home' %}" class="nav-link">Home</a>
+    </div>
+
+
+    <h2>Your Final Report</h2>
+
+    {% if report %}
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-size: 16px;">
+            {{ report|safe }}  <!-- ✅ Fix: Allows HTML formatting (br tags) -->
+        </div>
+    {% endif %}
+
+    <h2>AI Advice</h2>
+    {% if advice %}
+        <ul style="background: #f1f1f1; padding: 15px; border-radius: 8px; list-style-type: disc;">
+            {{ advice|safe }}  <!-- ✅ Fix: Allows formatted bullet points -->
+        </ul>
+    {% else %}
+        <p>No advice received.</p>
+    {% endif %}
+
+    
+</body>
+</html>

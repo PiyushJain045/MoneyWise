@@ -1,1 +1,158 @@
-Add cutom transaction
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Transaction</title>
+    <style>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 500px;
+                margin: auto;
+                padding: 20px;
+                background-color: #f4f4f4;
+            }
+            form {
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+            }
+            label {
+                font-weight: bold;
+                display: block;
+                margin-top: 10px;
+            }
+            input, select, button {
+                width: 100%;
+                padding: 8px;
+                margin-top: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            button {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                font-size: 16px;
+                cursor: pointer;
+                margin-top: 15px;
+            }
+            button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+
+<div>
+    <a href="{% url 'home' %}" class="nav-link">Home</a>
+</div>
+
+<h2>Add Custom Transaction</h2>
+
+<!-- method 1: let AI detect the details and fill the below form automatically -->
+<h3>Upload Receipt</h3>
+<form id="uploadReceiptForm" method="POST" action="{% url 'ai-receipt' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" id="receiptImage" name="receiptImage" accept="image/*,application/pdf" required>
+    <button type="submit">Let AI Read Your Receipt</button>
+</form>
+
+{% if error %}
+{{ error }}
+{% endif %}
+
+<!-- ✅ Method 2: Manually Add Transaction -->
+<form id="transactionForm" method="POST" action="{% url 'add-transaction' %}" onsubmit="return validateForm()">
+    {% csrf_token %}
+    
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" value="{{ date }}" required>
+
+    <label for="transaction_amount">Transaction Amount (₹):</label>
+    <input type="number" id="transaction_amount" name="transaction_amount" step="0.01" value="{{ transaction_amount }}" required>
+
+    <label for="type">Transaction Type:</label>
+    <select id="type" name="type" required>
+        <option value="">-- Select Type --</option>
+        <option value="CR" {% if type == "CR" %}selected{% endif %}>Credit</option>
+        <option value="DR" {% if type == "DR" %}selected{% endif %}>Debit</option>
+    </select>
+
+    <label for="recipient">Recipient:</label>
+    <input type="text" id="recipient" name="recipient" value="{{ recipient }}" required>
+
+    <label for="category">Category:</label>
+    <select id="category" name="category" required>
+        <option value="">-- Select Category --</option>
+        <option value="Food & Dining" {% if category == "Food & Dining" %}selected{% endif %}>Food & Dining</option>
+        <option value="Shopping" {% if category == "Shopping" %}selected{% endif %}>Shopping</option>
+        <option value="Entertainment" {% if category == "Entertainment" %}selected{% endif %}>Entertainment</option>
+        <option value="Health & Fitness" {% if category == "Health & Fitness" %}selected{% endif %}>Health & Fitness</option>
+        <option value="Transport" {% if category == "Transport" %}selected{% endif %}>Transport</option>
+        <option value="Utilities & Bills" {% if category == "Utilities & Bills" %}selected{% endif %}>Utilities & Bills</option>
+        <option value="Rent & Housing" {% if category == "Rent & Housing" %}selected{% endif %}>Rent & Housing</option>
+        <option value="Banking & Transfers" {% if category == "Banking & Transfers" %}selected{% endif %}>Banking & Transfers</option>
+        <option value="Education" {% if category == "Education" %}selected{% endif %}>Education</option>
+        <option value="Friend/Family" {% if category == "Friend/Family" %}selected{% endif %}>Friend/Family</option>
+        <option value="Other" {% if category == "Other" %}selected{% endif %}>Other</option>
+    </select>
+
+    <button type="submit">Add Transaction</button>
+</form>
+
+<script>
+    function validateForm() {
+        const date = document.getElementById("date").value;
+        const balanceAmount = document.getElementById("balance_amount").value;
+        const transactionAmount = document.getElementById("transaction_amount").value;
+        const type = document.getElementById("type").value;
+        const recipient = document.getElementById("recipient").value.trim();
+        const category = document.getElementById("category").value;
+
+        // Validate date
+        if (!date) {
+            alert("Please select a valid date.");
+            return false;
+        }
+
+        // Validate balance amount
+        if (!balanceAmount || balanceAmount <= 0) {
+            alert("Balance amount must be a valid positive number.");
+            return false;
+        }
+
+        // Validate transaction amount
+        if (!transactionAmount || transactionAmount <= 0) {
+            alert("Transaction amount must be a valid positive number.");
+            return false;
+        }
+
+        // Validate transaction type
+        if (!type) {
+            alert("Please select a transaction type (Credit or Debit).");
+            return false;
+        }
+
+        // Validate recipient
+        if (recipient === "") {
+            alert("Recipient name cannot be empty.");
+            return false;
+        }
+
+        // Validate category
+        if (!category) {
+            alert("Please select a category.");
+            return false;
+        }
+
+        // ✅ If all checks pass, allow form submission
+        return true;
+    }
+</script>
+
+</body>
+</html>

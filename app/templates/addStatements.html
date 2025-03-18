@@ -45,6 +45,11 @@
     </style>
 </head>
 <body>
+
+    <div>
+        <a href="{% url 'home' %}" class="nav-link">Home</a>
+    </div>
+
     <div class="upload-form">
         <h2>Upload CSV File</h2>
         <form action="{% url 'add-statements' %}" method="POST" enctype="multipart/form-data">
