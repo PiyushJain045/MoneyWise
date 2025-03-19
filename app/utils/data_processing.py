@@ -29,11 +29,12 @@ def clean_bank_statements(csv_file):
 
     # create a dataframe
     df = pd.read_csv(file_like_object, skiprows=7, skipfooter=1, engine='python')
-    print(df.head)
+    print("DATA:", df.head())
     print("Column Names:", df.columns)
 
     # fill credit + debit missing values because in a boi bank statement they are the only empty fileld
     df.fillna(0, inplace=True)
+    
 
     # Combine 'Debit' + 'Credit' to create a new column 'Transaction_Amount'
     df['Transaction_Amount'] = df['Debit'] + df['Credit']
