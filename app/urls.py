@@ -13,4 +13,5 @@ urlpatterns = [
     path('Profile', views.ProfileSection.as_view(), name='profile'),
     path('Recurring Payment', views.RecurringPayments.as_view(), name='recurring'),
     path("onboarding/", views.OnBoarding, name="onboarding"),
+    path("Anamoly Detection", views.Security.as_view(), name="security"),
 ]

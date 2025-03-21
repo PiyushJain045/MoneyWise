@@ -82,7 +82,7 @@ def add_category(file_path, artifacts_folder):
 
         # Create a prompt for Gemini
         prompt = """
-        I am using you in my ai finance management project. Based on the 'Recipient' column in the following CSV data, create a category column in the same CSV and categorize each transaction into one of these categories:
+        I am using you in my ai finance management project. Based on the 'Recipient' column in the following CSV data, categorize each transaction into one of these categories:
         - Food & Dining
         - Transport
         - Shopping
@@ -95,21 +95,26 @@ def add_category(file_path, artifacts_folder):
         - Friend/Family
         - Other
 
-        and ALWAYS add this column to the same csv and return ONLY the UPDATED csv. Sometimes you are only returing csv file with single column. DONT DO THAt
-        no other text at all. ONLY CSV with added category column 
+        CONCATINATE this categories with the original CSV file and return the UPDATED csv. 
 
         Here is the data:
         """ + df.to_csv(index=False)
 
         # Send the prompt to Gemini
         response = model.generate_content(prompt)
+        print("****************************************************************************************************")
+        print("****************************************************************************************************")
         print("RESPONSE", response)
+        print("RESPONSE", response.candidates[0].content.parts[0].text)
 
         # Extract the response (assuming it returns a CSV with a 'Category' column)
-        updated_csv = response.text
+        updated_csv = response.candidates[0].content.parts[0].text
 
         # Convert the response to a DataFrame
-        updated_df = pd.read_csv(StringIO(updated_csv))
+        updated_df = pd.read_csv(StringIO(updated_csv.strip().strip("```csv").strip()))
+        print("****************************************************************************************************")
+        print("****************************************************************************************************")
+        print(updated_df.head())
 
         # Save the updated DataFrame to a new CSV file
         updated_file_path = os.path.join(artifacts_folder, 'updated_transaction.csv')

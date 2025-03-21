@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +9,7 @@
     <style>
         .error { color: red; font-size: 14px; }
     </style>
-    <link rel="stylesheet" href="static\css\onBoarding.css">
+    <link rel="stylesheet" href="{% static 'css/onBoarding.css' %}">
 </head>
 <body>
 
@@ -61,7 +63,7 @@
         </select>
 
         <label for="current_balance">Current Balance (₹):</label>
-        <input type="number" id="current_balance" name="current_balance" min="0" step="0.01" placeholder="Or let AI detect it">
+        <input type="number" id="current_balance" name="current_balance" min="0" step="0.01" placeholder="Or enter 0 to let us detect it" required>
         <span class="error" id="balanceError"></span>
 
         <!-- ✅ Monthly Budget Section -->

@@ -11,6 +11,7 @@ from django.conf import settings
 from datetime import datetime
 import base64
 import json
+import csv
 import numpy as np
 
 #Graphs and visualization
@@ -214,18 +215,18 @@ class addStatements(View):
 
         # Read the updated CSV file and store data in the database
         try:
-            # with open(updated_csv_path, mode='r') as file:
-            #     csv_reader = csv.DictReader(file)
-            #     for row in csv_reader:
-            #         # Create a Transaction object for each row
-            #         Transaction.objects.create(
-            #             date=row['Date'],
-            #             balance_amount=row['Balance Amount'],
-            #             transaction_amount=row['Transaction_Amount'],
-            #             type=row['Type'],
-            #             recipient=row['Recipient'],
-            #             category=row['Category']
-            #         )
+            with open(updated_csv_path, mode='r') as file:
+                csv_reader = csv.DictReader(file)
+                for row in csv_reader:
+                    # Create a Transaction object for each row
+                    Transaction.objects.create(
+                        date=row['Date'],
+                        balance_amount=row['Balance Amount'],
+                        transaction_amount=row['Transaction_Amount'],
+                        type=row['Type'],
+                        recipient=row['Recipient'],
+                        category=row['Category']
+                    )
                     # Success message
             return redirect("dashboard")
         
@@ -520,5 +521,12 @@ class RecurringPayments(View):
         print("Recurring payment saved successfully!")
 
         return redirect('recurring')
+    
 
+class Security(View):
+    def get(self, request):
+        return render(request, 'security.html')
+
+    def post(self, request):
+        pass
     

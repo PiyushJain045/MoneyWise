@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Transaction</title>
     <style>
-        <style>
             body {
                 font-family: Arial, sans-serif;
                 max-width: 500px;
@@ -33,7 +32,7 @@
                 border-radius: 5px;
             }
             button {
-                background-color: #007bff;
+                background-color:rgb(255, 8, 0);
                 color: white;
                 border: none;
                 font-size: 16px;
@@ -44,17 +43,17 @@
                 background-color: #0056b3;
             }
     </style>
+    <link rel="stylesheet" href="static\css\addTransaction.css">
 </head>
 <body>
 
 <div>
-    <a href="{% url 'home' %}" class="nav-link">Home</a>
+    <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
 </div>
 
 <h2>Add Custom Transaction</h2>
 
 <!-- method 1: let AI detect the details and fill the below form automatically -->
-<h3>Upload Receipt</h3>
 <form id="uploadReceiptForm" method="POST" action="{% url 'ai-receipt' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" id="receiptImage" name="receiptImage" accept="image/*,application/pdf" required>

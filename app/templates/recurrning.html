@@ -74,11 +74,36 @@
         .form-container button:hover {
             background-color: #218838;
         }
+
+        
+
+/* Navigation Link */
+.nav-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: 10%;
+}
+
+.nav-link:hover {
+    background-color: #0056b3;
+}
+
+
     </style>
 </head>
 <body>
     <div class="container">
+
+        <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
         <h2>Recurring Payments</h2>
+
 
         {% if message %}
             <p class="message">{{ message }}</p>

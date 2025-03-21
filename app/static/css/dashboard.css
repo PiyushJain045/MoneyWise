@@ -98,7 +98,7 @@ label {
 }
 
 select, button {
-    width: 100%;
+    width: 20%;
     padding: 10px;
     margin: 10px 0;
     border: none;
@@ -269,4 +269,117 @@ tr:hover {
     .form-select, .form-button {
         width: 100%;
     }
+}
+
+/* *********************************** */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between elements */
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Adjust as needed */
+    margin: 0 auto; /* Center the form */
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between label and dropdown */
+}
+
+label {
+    font-weight: 500;
+    color: #555;
+    white-space: nowrap; /* Prevent label from wrapping */
+}
+
+.form-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+    transition: border-color 0.3s ease;
+}
+
+.form-select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-button {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent button text from wrapping */
+}
+
+.form-button:hover {
+    background-color: #0056b3;
+}
+
+/* ****************************** */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between elements */
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Adjust as needed */
+    margin: 0 auto; /* Center the form */
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between label and dropdown */
+}
+
+label {
+    font-weight: 500;
+    color: #555;
+    white-space: nowrap; /* Prevent label from wrapping */
+}
+
+.form-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+    transition: border-color 0.3s ease;
+    min-width: 120px; /* Ensure dropdowns have a minimum width */
+}
+
+.form-select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-button {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent button text from wrapping */
+}
+
+.form-button:hover {
+    background-color: #0056b3;
 }

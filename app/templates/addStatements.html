@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload CSV File</title>
+    <title>Upload Bank Statement</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,7 +42,9 @@
         .upload-form input[type="submit"]:hover {
             background-color: #218838;
         }
+        
     </style>
+    <link rel="stylesheet" href="static\css\addStatements.css">
 </head>
 <body>
 
@@ -51,10 +53,10 @@
     </div>
 
     <div class="upload-form">
-        <h2>Upload CSV File</h2>
+        <h2>Upload BOI Statement. Atleast last 30 days or 3 months</h2>
         <form action="{% url 'add-statements' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %} <!-- Required for Django CSRF protection -->
-            <label for="csvFile">Choose a CSV file:</label>
+            <label for="csvFile"></label>
             <input type="file" id="csvFile" name="csvFile" accept=".csv" required>
             <input type="submit" value="Upload">
         </form>
@@ -73,5 +75,5 @@
             {{ error }}
         </div>
     {% endif %}
-</body>
+</body> 
 </html>
