@@ -11,6 +11,7 @@ from django.conf import settings
 from datetime import datetime
 import base64
 import json
+import numpy as np
 
 #Graphs and visualization
 from django.utils import timezone
@@ -24,6 +25,7 @@ from .utils.visualization import (
     monthly_budget_visualization, estimate_section
 )  
 from .utils.generate_financial_report import generate_financial_report
+from .utils.detect_anamoly import anamoly_detection
 
 # Imports for Environment Variable
 import os
@@ -245,7 +247,13 @@ class AddTransaction(View):
           transaction_type = request.POST.get('type')
           recipient = request.POST.get('recipient')
           category = request.POST.get('category')
-          print(date, transaction_amount, type, recipient, category)
+          print(date, transaction_amount, transaction_type, recipient, category)
+
+          # numpy array
+          print("BEFORE")
+          feature_array = np.array([date,transaction_amount,transaction_type,recipient,category]).reshape(1, -1)
+          anamoly_detection(feature_array)
+
 
           # Convert date string to DateField format
           date = datetime.strptime(date, "%Y-%m-%d").date()
