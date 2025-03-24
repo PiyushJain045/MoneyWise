@@ -37,9 +37,8 @@
 
 
     <h2>Financial Overview</h2>
-
+    <p><strong>Current Balance:</strong> ₹{{ balance|floatformat:2 }}</p>
     {% if estimate_data %}
-        <p><strong>Current Balance:</strong> ₹{{ estimate_data.current_balance|floatformat:2 }}</p>
         <p><strong>Average Monthly Income:</strong> ₹{{ estimate_data.avg_monthly_income|floatformat:2 }}</p>
         <p><strong>Average Monthly Expense:</strong> ₹{{ estimate_data.avg_monthly_expense|floatformat:2 }}</p>
         <p style="color: {{ estimate_data.net_color }}; font-weight: bold;">

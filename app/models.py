@@ -121,3 +121,19 @@ class RecurringPayment(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.type} - ₹{self.amount} on Day {self.date}"
+
+
+#6 
+class AnomalousTransaction(models.Model):
+    balance_amount = models.FloatField()
+    date = models.DateField()
+    transaction_amount = models.FloatField()
+    transaction_type = models.CharField(max_length=2)  # DR/CR
+    recipient = models.CharField(max_length=100)
+    category = models.CharField(max_length=50)
+    anomaly_score = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewed = models.BooleanField(default=False)  # For manual review
+
+    class Meta:
+        ordering = ['-date']

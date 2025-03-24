@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
-from .models import Transaction, Profile, UserAccount, MonthlyBudget, RecurringPayment
+from .models import Transaction, Profile, UserAccount, MonthlyBudget, RecurringPayment, AnomalousTransaction
 from django.contrib import messages
 
 
@@ -26,7 +26,7 @@ from .utils.visualization import (
     monthly_budget_visualization, estimate_section
 )  
 from .utils.generate_financial_report import generate_financial_report
-from .utils.detect_anamoly import anamoly_detection
+from .utils.anamoly import detect_anomaly
 
 # Imports for Environment Variable
 import os
@@ -54,18 +54,20 @@ class Dashboard(View):
     def get(self, request):
         print("Inside GET dashboard")
 
+        latest_transaction = Transaction.objects.order_by("-id").first()
+        current_balance = latest_transaction.balance_amount if latest_transaction else 0
+
         ### ACCOUNT DATA
         user_account = UserAccount.objects.filter(user=request.user).first()
 
         if user_account:
             account_name = user_account.account_name
             account_type = user_account.account_type
+            # current_balance = user_account.current_balance
         else:
             account_name = "No Account Found"
             account_type = "N/A"
-
-        print("Account Name:", account_name)
-        print("Account Type:", account_type)
+            # current_balance = "N/A"
 
         ### ESTIMATE SECTION
         estimate_data = estimate_section()
@@ -123,6 +125,7 @@ class Dashboard(View):
             "monthly_budget": monthly_budget_target,
             "account_name": account_name,
             "account_type": account_type,
+            "balance": current_balance
         })
 
     def post(self, request):
@@ -250,11 +253,38 @@ class AddTransaction(View):
           category = request.POST.get('category')
           print(date, transaction_amount, transaction_type, recipient, category)
 
+          latest_transaction = Transaction.objects.order_by("-date").first()
+          current_balance = latest_transaction.balance_amount if latest_transaction else 0
+
           # numpy array
           print("BEFORE")
-          feature_array = np.array([date,transaction_amount,transaction_type,recipient,category]).reshape(1, -1)
-          anamoly_detection(feature_array)
+          data = {
+                "balance_amount": float(current_balance),
+                "date": date,
+                "transaction_amount": transaction_amount,
+                "transaction_type": transaction_type,
+                "recipient": recipient,
+                "category": category,
+            }
+          
+          print("/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+          result = detect_anomaly(data)
+          print("Anomaly Detection Result:")
+          print(f"Is Anomaly: {result['is_anomaly']}")
+          print(f"Anomaly Score: {result['anomaly_score']:.4f}")
 
+          if result['is_anomaly'] < -0.4:
+            # Store in AnomalousTransaction model
+            print("INSIDE IF")
+            AnomalousTransaction.objects.create(
+                balance_amount=data['balance_amount'],
+                date=data['date'],
+                transaction_amount=data['transaction_amount'],
+                transaction_type=data['transaction_type'],
+                recipient=data['recipient'],
+                category=data['category'],
+                anomaly_score=result['anomaly_score']
+            )
 
           # Convert date string to DateField format
           date = datetime.strptime(date, "%Y-%m-%d").date()
@@ -525,7 +555,13 @@ class RecurringPayments(View):
 
 class Security(View):
     def get(self, request):
-        return render(request, 'security.html')
+        # Get all unreviewed anomalous transactions
+        anomalies = AnomalousTransaction.objects.filter(reviewed=False).order_by('-date')
+        
+        context = {
+            'anomalies': anomalies,
+        }
+        return render(request, 'security.html', context)
 
     def post(self, request):
         pass

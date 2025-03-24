@@ -1,1 +1,48 @@
-Anamoly Detection
+{% load static %}
+
+<html>
+<head>
+    <title>Security</title>
+    <link rel="stylesheet" href="static\css\security.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Anomaly Detection Alerts</h2>
+
+    <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+
+
+    <div class="list-group mt-3">
+        {% for anomaly in anomalies %}
+        <div class="list-group-item list-group-item-action flex-column align-items-start mb-2 
+                    {% if anomaly.anomaly_score < -0.5 %}list-group-item-danger{% else %}list-group-item-warning{% endif %}">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ anomaly.recipient }}</h5>
+                <small>{{ anomaly.date }}</small>
+            </div>
+            <p class="mb-1">
+                Amount: {{ anomaly.transaction_amount }} ({{ anomaly.transaction_type }})<br>
+                Category: {{ anomaly.category }}<br>
+                Anomaly Score: {{ anomaly.anomaly_score|floatformat:4 }}
+            </p>
+            <div class="mt-2">
+                <button class="btn btn-sm btn-success confirm-btn" 
+                        data-transaction-id="{{ anomaly.id }}">
+                    <i class="fas fa-check"></i> It was me
+                </button>
+                <button class="btn btn-sm btn-danger reject-btn" 
+                        data-transaction-id="{{ anomaly.id }}">
+                    <i class="fas fa-times"></i> Not me
+                </button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-success">
+            No anomalies detected! Everything looks good.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Register your models here.
 from django.contrib import admin
-from .models import Transaction, Profile, UserAccount, MonthlyBudget
+from .models import Transaction, Profile, UserAccount, MonthlyBudget, AnomalousTransaction
 
 class TransactionAdmin(admin.ModelAdmin):
     # Fields to display in the list view
@@ -50,3 +50,5 @@ admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(UserAccount, UserAccountAdmin)
 admin.site.register(MonthlyBudget, MonthlyBudgetAdmin)
+admin.site.register(AnomalousTransaction)
+

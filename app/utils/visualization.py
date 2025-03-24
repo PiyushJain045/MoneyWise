@@ -47,17 +47,18 @@ def trend_line_graph(n, time_unit="days"):
         df = df.sort_values("date")
 
         # Plot the trend line
-        plt.figure(figsize=(10, 5))
+        plt.figure(figsize=(12, 6))
         sns.lineplot(data=df, x="date", y="transaction_amount", marker="o", linestyle="-", color="blue")
         plt.xlabel("Date")
         plt.ylabel("Total Transaction Amount (₹)")
         plt.title(title)
-        plt.xticks(rotation=45)
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
         plt.grid(True)
 
         # Convert plot to Base64 image
         buffer = BytesIO()
-        plt.savefig(buffer, format="png")
+        plt.savefig(buffer, format="png", bbox_inches="tight")
         buffer.seek(0)
         image_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
         plt.close()
@@ -103,7 +104,7 @@ def expense_category_pie_chart(n, time_unit="days"):
 
         # Aggregate total spending by category
         category_totals = df.groupby("category")["transaction_amount"].sum()
-        print("DF")
+        
         print(category_totals.head())
 
         if category_totals.empty:
@@ -111,19 +112,42 @@ def expense_category_pie_chart(n, time_unit="days"):
             return None  # No expenses in this period
 
         # Plot the Pie Chart
-        plt.figure(figsize=(8, 6))
-        category_totals.plot.pie(autopct='%1.1f%%', startangle=90, cmap="tab10")
-        plt.title(title)
-        plt.ylabel("")  # Hide the default y-axis label
+        plt.figure(figsize=(10, 8))  # Increase figure size for better spacing
+
+        # Explode smaller slices for better visibility
+        explode = [0.1 if (value / category_totals.sum()) < 0.05 else 0 for value in category_totals]
+
+        # Plot the pie chart
+        wedges, texts, autotexts = plt.pie(
+            category_totals,
+            labels=category_totals.index,
+            autopct='%1.1f%%',
+            startangle=90,
+            explode=explode,
+            pctdistance=0.85,  # Adjust percentage label distance
+            labeldistance=1.1,  # Adjust category label distance
+            colors=sns.color_palette("tab10"),  # Use a better color palette
+            textprops={'fontsize': 10}  # Adjust font size
+        )
+
+        # Add a legend for better readability
+        plt.legend(
+            wedges,
+            category_totals.index,
+            title="Categories",
+            loc="center left",
+            bbox_to_anchor=(1, 0, 0.5, 1)  # Place legend outside the pie chart
+        )
+
+        plt.title(title, pad=20)  # Add padding to the title
+        plt.tight_layout()  # Automatically adjust layout to prevent overlap
 
         # Convert plot to Base64 image
         buffer = BytesIO()
-        plt.savefig(buffer, format="png")
+        plt.savefig(buffer, format="png", bbox_inches="tight")  # Use bbox_inches="tight" to prevent cropping
         buffer.seek(0)
 
         # Check if buffer contains data
-        print("Buffer size:", buffer.getbuffer().nbytes)
-
         if buffer.getbuffer().nbytes == 0:
             print("⚠️ Empty buffer! Something went wrong with the plot.")
             return None
@@ -181,7 +205,7 @@ def income_vs_expense_bar_chart(n, time_unit="days"):
         values = [income, expense]
 
         # Create bar chart
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(12, 8))
         sns.barplot(x=categories, y=values, palette=["green", "red"])
 
         # Add labels
