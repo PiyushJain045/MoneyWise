@@ -555,14 +555,33 @@ class RecurringPayments(View):
 
 class Security(View):
     def get(self, request):
-        # Get all unreviewed anomalous transactions
         anomalies = AnomalousTransaction.objects.filter(reviewed=False).order_by('-date')
-        
-        context = {
-            'anomalies': anomalies,
-        }
+        context = {'anomalies': anomalies}
         return render(request, 'security.html', context)
 
     def post(self, request):
-        pass
+        print("INSIDE ANOMALY POST")
+        transaction_id = request.POST.get('transaction_id')
+        action = request.POST.get('action')
+
+        if action == 'confirm':
+            try:
+                anomaly = AnomalousTransaction.objects.get(id=transaction_id)
+                anomaly.reviewed = True
+                anomaly.save()
+                return redirect('security')
+            except Exception as e:
+                return redirect('security')
+
+        if action == 'reject':
+            anomalies = AnomalousTransaction.objects.filter(reviewed=False).order_by('-date')
+            return render(
+                request,
+                'security.html',
+                {
+                    "anomalies": anomalies,
+                    "warning": "Report Anomaly immediately to your Branch or Call on Toll-Free No. 1800 103 1906"
+                }
+            )        
+       
     
