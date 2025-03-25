@@ -54,6 +54,7 @@ class Dashboard(View):
     def get(self, request):
         print("Inside GET dashboard")
 
+        ### Current balance
         latest_transaction = Transaction.objects.order_by("-id").first()
         current_balance = latest_transaction.balance_amount if latest_transaction else 0
 
@@ -130,6 +131,10 @@ class Dashboard(View):
 
     def post(self, request):
 
+        ### Current balance
+        latest_transaction = Transaction.objects.order_by("-id").first()
+        current_balance = latest_transaction.balance_amount if latest_transaction else 0
+
         ### ACCOUNT DATA
         user_account = UserAccount.objects.filter(user=request.user).first()
 
@@ -189,6 +194,7 @@ class Dashboard(View):
              "monthly_budget": monthly_budget_target,
              "account_name": account_name,
             "account_type": account_type,
+            "balance": current_balance
         })
 
 
@@ -253,7 +259,7 @@ class AddTransaction(View):
           category = request.POST.get('category')
           print(date, transaction_amount, transaction_type, recipient, category)
 
-          latest_transaction = Transaction.objects.order_by("-date").first()
+          latest_transaction = Transaction.objects.order_by("-id").first()
           current_balance = latest_transaction.balance_amount if latest_transaction else 0
 
           # numpy array
@@ -273,7 +279,7 @@ class AddTransaction(View):
           print(f"Is Anomaly: {result['is_anomaly']}")
           print(f"Anomaly Score: {result['anomaly_score']:.4f}")
 
-          if result['is_anomaly'] < -0.4:
+          if result['is_anomaly']:
             # Store in AnomalousTransaction model
             print("INSIDE IF")
             AnomalousTransaction.objects.create(
@@ -293,8 +299,9 @@ class AddTransaction(View):
           transaction_amount = float(transaction_amount)
 
           # Get latest balance (from the last transaction)
-          last_transaction = Transaction.objects.order_by("-date").first()
-          last_balance = last_transaction.balance_amount if last_transaction else 0.0
+
+          last_transaction = Transaction.objects.order_by("-id").first()
+          last_balance = last_transaction.balance_amount if last_transaction else 0
 
           # Update balance based on transaction type
           if transaction_type == "CR":
