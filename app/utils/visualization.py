@@ -3,6 +3,7 @@ import matplotlib
 matplotlib.use("Agg")  # Prevents GUI issues
 import pandas as pd
 import seaborn as sns
+import matplotlib.dates as mdates
 
 from datetime import datetime, timedelta
 
@@ -11,6 +12,64 @@ import base64
 from app.models import Transaction  # Import your model
 
 # Graph 1: line chart
+# def trend_line_graph(n, time_unit="days"):
+#     """
+#     Generates a trend line chart for the last N days or months showing transaction trends.
+    
+#     :param n: Time filter (7, 30, 90, 180 for days OR 1, 3, 6 for months)
+#     :param time_unit: "days" or "months"
+#     :return: Base64-encoded image for embedding in Django templates
+#     """
+#     try:
+#         # Fetch transactions using class methods
+#         if time_unit == "days":
+#             transactions = Transaction.get_last_n_days_transactions(n)
+#             title = f"Spending Trend Over the Last {n} Days"
+#         elif time_unit == "months":
+#             transactions = Transaction.get_last_n_months_transactions(n)
+#             title = f"Spending Trend Over the Last {n} Months"
+#         else:
+#             raise ValueError("Invalid time_unit. Choose 'days' or 'months'.")
+
+#         # Convert QuerySet to DataFrame
+#         df = pd.DataFrame(list(transactions.values("date", "transaction_amount")))
+
+#         if df.empty:
+#             print("No transactions found for the selected period.")
+#             return None
+
+#         # Convert Date column to datetime format
+#         df["date"] = pd.to_datetime(df["date"])
+
+#         # Aggregate total spending per day
+#         df = df.groupby("date")["transaction_amount"].sum().reset_index()
+
+#         # Sort values by date
+#         df = df.sort_values("date")
+
+#         # Plot the trend line
+#         plt.figure(figsize=(12, 6))
+#         sns.lineplot(data=df, x="date", y="transaction_amount", marker="o", linestyle="-", color="blue")
+#         plt.xlabel("Date")
+#         plt.ylabel("Total Transaction Amount (₹)")
+#         plt.title(title)
+#         plt.xticks(rotation=45, ha='right')
+#         plt.tight_layout()
+#         plt.grid(True)
+
+#         # Convert plot to Base64 image
+#         buffer = BytesIO()
+#         plt.savefig(buffer, format="png", bbox_inches="tight")
+#         buffer.seek(0)
+#         image_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+#         plt.close()
+
+#         return image_base64
+
+#     except Exception as e:
+#         print(f"Error generating trend line graph: {e}")
+#         return None
+    
 def trend_line_graph(n, time_unit="days"):
     """
     Generates a trend line chart for the last N days or months showing transaction trends.
@@ -20,13 +79,18 @@ def trend_line_graph(n, time_unit="days"):
     :return: Base64-encoded image for embedding in Django templates
     """
     try:
+        # Clear any existing plots
+        plt.close('all')
+        
         # Fetch transactions using class methods
         if time_unit == "days":
             transactions = Transaction.get_last_n_days_transactions(n)
             title = f"Spending Trend Over the Last {n} Days"
+            date_format = '%b %d'
         elif time_unit == "months":
             transactions = Transaction.get_last_n_months_transactions(n)
             title = f"Spending Trend Over the Last {n} Months"
+            date_format = '%b %Y'
         else:
             raise ValueError("Invalid time_unit. Choose 'days' or 'months'.")
 
@@ -37,36 +101,81 @@ def trend_line_graph(n, time_unit="days"):
             print("No transactions found for the selected period.")
             return None
 
-        # Convert Date column to datetime format
+        # Data validation and cleaning
         df["date"] = pd.to_datetime(df["date"])
+        df = df.dropna()
+        df["transaction_amount"] = pd.to_numeric(df["transaction_amount"], errors='coerce')
+        df = df.dropna(subset=["transaction_amount"])
 
-        # Aggregate total spending per day
+        # Aggregate and sort
         df = df.groupby("date")["transaction_amount"].sum().reset_index()
-
-        # Sort values by date
         df = df.sort_values("date")
 
-        # Plot the trend line
-        plt.figure(figsize=(12, 6))
-        sns.lineplot(data=df, x="date", y="transaction_amount", marker="o", linestyle="-", color="blue")
-        plt.xlabel("Date")
-        plt.ylabel("Total Transaction Amount (₹)")
-        plt.title(title)
-        plt.xticks(rotation=45, ha='right')
-        plt.tight_layout()
-        plt.grid(True)
+        # Create figure with modern style
+        plt.figure(figsize=(10, 5.5), dpi=100)
+        sns.set_style("whitegrid", {'grid.linestyle': '--', 'grid.alpha': 0.4})
+        
+        # Create the plot
+        ax = sns.lineplot(
+            data=df, 
+            x="date", 
+            y="transaction_amount", 
+            marker="o", 
+            markersize=8,
+            linewidth=2.5,
+            color="#4C72B0",
+            markerfacecolor="#DD8452",
+            markeredgecolor="#DD8452"
+        )
+        
+        # Add value annotations
+        y_offset = df["transaction_amount"].max() * 0.03
+        for _, row in df.iterrows():
+            ax.text(
+                row['date'], 
+                row['transaction_amount'] + y_offset, 
+                f"₹{int(row['transaction_amount'])}", 
+                ha='center',
+                va='bottom',
+                fontsize=9,
+                color="#555555"
+            )
+        
+        # Style the plot
+        plt.xlabel("Date", fontsize=11, labelpad=10, color="#333333")
+        plt.ylabel("Amount (₹)", fontsize=11, labelpad=10, color="#333333")
+        plt.title(title, fontsize=14, pad=20, color="#222222", fontweight='bold')
+        ax.xaxis.set_major_formatter(mdates.DateFormatter(date_format))
+        plt.xticks(rotation=45, ha='right', fontsize=9, color="#555555")
+        plt.yticks(fontsize=9, color="#555555")
+        sns.despine(left=True, bottom=True)
+        ax.set_facecolor('#F8F9FA')
+        
+        # Add watermark
+        ax.text(
+            0.5, 0.5, 
+            'Personal Finance', 
+            transform=ax.transAxes,
+            fontsize=40, 
+            color='gray',
+            alpha=0.1,
+            ha='center', 
+            va='center',
+            rotation=30
+        )
 
-        # Convert plot to Base64 image
+        # Save to buffer
         buffer = BytesIO()
-        plt.savefig(buffer, format="png", bbox_inches="tight")
+        plt.savefig(buffer, format="png", bbox_inches="tight", dpi=120, pad_inches=0.5)
         buffer.seek(0)
-        image_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
-        plt.close()
-
+        image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+        plt.close('all')
+        
         return image_base64
 
     except Exception as e:
         print(f"Error generating trend line graph: {e}")
+        plt.close('all')
         return None
     
 # Graph 2: Pie Chart

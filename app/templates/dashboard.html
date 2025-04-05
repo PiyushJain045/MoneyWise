@@ -86,12 +86,18 @@
     </form>
     
      <!-- Graph 1: Spending Trend -->
-     <h2>Spending Trend</h2>
-     {% if trend_graph %}
-         <img src="data:image/png;base64,{{ trend_graph }}" alt="Spending Trend Graph" />
-     {% else %}
-         <p>No data available for the selected period.</p>
-     {% endif %}
+<!-- Graph 1: Spending Trend -->
+<div class="finance-graph-container">
+    <h2>Spending Trend</h2>
+    {% if trend_graph %}
+        <img src="data:image/png;base64,{{ trend_graph }}" 
+             alt="Spending Trend Graph" 
+             class="responsive-graph">
+    {% else %}
+        <p class="no-data-message">No spending data available</p>
+    {% endif %}
+</div>
+
  
      <!-- Graph 2: Expense Breakdown (Pie Chart) -->
      <h2>Expense Breakdown by Category</h2>
