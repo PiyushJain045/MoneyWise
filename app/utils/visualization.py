@@ -221,7 +221,7 @@ def expense_category_pie_chart(n, time_unit="days"):
             return None  # No expenses in this period
 
         # Plot the Pie Chart
-        plt.figure(figsize=(10, 8))  # Increase figure size for better spacing
+        plt.figure(figsize=(6,10))  # Increase figure size for better spacing
 
         # Explode smaller slices for better visibility
         explode = [0.1 if (value / category_totals.sum()) < 0.05 else 0 for value in category_totals]
@@ -314,7 +314,7 @@ def income_vs_expense_bar_chart(n, time_unit="days"):
         values = [income, expense]
 
         # Create bar chart
-        plt.figure(figsize=(12, 8))
+        plt.figure(figsize=(5, 5))
         sns.barplot(x=categories, y=values, palette=["green", "red"])
 
         # Add labels
@@ -389,7 +389,7 @@ def top_5_expenses_donut_chart(n, time_unit="days"):
         amounts = top_expenses["transaction_amount"]
 
         # Create a Donut Chart (Pie Chart with a Hole)
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(5, 5))
         wedges, texts, autotexts = plt.pie(
             amounts, labels=recipients, autopct='%1.1f%%', startangle=140,
             wedgeprops={'linewidth': 1, 'edgecolor': 'black'},
