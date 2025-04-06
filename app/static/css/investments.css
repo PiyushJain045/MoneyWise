@@ -1,0 +1,170 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fbfc;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: auto;
+  }
+  
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+    color: #0070f3;
+  }
+  
+  .header p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .header button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #0070f3;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .card-row {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .card {
+    flex: 1;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  .label {
+    color: #888;
+    font-size: 0.9rem;
+  }
+  
+  .card h2 {
+    margin: 10px 0;
+    font-size: 2rem;
+  }
+  
+  .change {
+    color: #27ae60;
+    font-size: 0.9rem;
+  }
+  
+  .allocation {
+    margin-top: 40px;
+  }
+  
+  .allocation-chart {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .legend {
+    list-style: none;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+  
+  .legend li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .stocks { background-color: #1E90FF; }
+  .real-estate { background-color: #FFA500; }
+  .bonds { background-color: #8A2BE2; }
+  .crypto { background-color: #FF69B4; }
+  
+  #investmentForm {
+    margin-top: 40px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  #investmentForm.hidden {
+    display: none;
+  }
+  
+  #investmentForm label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 500;
+  }
+  
+  #investmentForm input,
+  #investmentForm select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  #investmentForm button {
+    margin-top: 20px;
+    background-color: #0070f3;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .chart-container {
+    width: 180px;
+    height: 180px;
+  }
+
+  #profile-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #1E90FF;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    width: 40%;
+  }
+  
+  #profile-link:hover {
+    background-color: #187bcd;
+    transform: scale(1.03);
+  }
+  
+  #profile-link:active {
+    transform: scale(0.97);
+  }
+  

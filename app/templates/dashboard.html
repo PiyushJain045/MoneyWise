@@ -22,12 +22,13 @@
 <body>
 
     <div class="nav-container">
-        <a href="{% url 'home' %}" class="nav-link" id="home-link">Home</a>
-        <a href="{% url 'financial-report' %}" class="nav-link" id="finance-link">AI Advice</a>
-        <a href="{% url 'st_homepage' %}" class="nav-link" id="stock-link">Investments</a>
-        <a href="{% url 'add-statements' %}" class="nav-link" id="add-link">Add Statements</a>
+        <a href="{% url 'home' %}" class="nav-link" id="home-link">MoneyWiseAI</a>
+        <a href="{% url 'financial-report' %}" class="nav-link" id="finance-link">AI Advisor</a>
+        <a href="{% url 'investment' %}" class="nav-link" id="stock-link">Investments</a>
+        <a href="{% url 'add-statements' %}" class="nav-link" id="add-link">Add Transactions</a>
         <a href="{% url 'profile' %}" class="nav-link" id="profile-link">Profile</a>
         <a href="{% url 'security' %}" class="nav-link" id="profile-link">Security</a>
+        <a href="{% url 'learn' %}" class="nav-link" id="profile-link">Learn</a>
 
     </div>
     <!-- Financial Overview -->
@@ -197,6 +198,42 @@ style="display: inline-block;
             {{ error }}
         </div>
     {% endif %}
+
+<!-- Financial News Section -->
+<div class="news-section">
+    <h2>Financial News</h2>
+    <div class="news-container">
+        <div class="news-card">
+            <h3 class="news-title">RBI Keeps Repo Rate Unchanged at 6.5% for Seventh Straight Time</h3>
+            <div class="news-meta">
+                <span class="news-source">The Economic Times</span>
+                <span class="news-date">June 7, 2024</span>
+            </div>
+            <p class="news-excerpt">The Reserve Bank of India maintained status quo on the key policy rate as widely expected, but signaled it could consider reducing rates if inflation falls sustainably to its 4% target.</p>
+            <a href="https://economictimes.indiatimes.com/news/economy/policy/rbi-mpc-meet-live-updates-repo-rate-inflation-gdp-growth-7-june-2024/liveblog/110796937.cms" class="news-link" target="_blank">Read more →</a>
+        </div>
+
+        <div class="news-card">
+            <h3 class="news-title">India's GDP Growth Surges to 7.8% in Q4, FY24 Growth at 8.2%</h3>
+            <div class="news-meta">
+                <span class="news-source">Business Standard</span>
+                <span class="news-date">May 31, 2024</span>
+            </div>
+            <p class="news-excerpt">India's economy grew at its fastest pace in six quarters in January-March, driven by strong performance in manufacturing and construction sectors.</p>
+            <a href="https://www.business-standard.com/economy/news/india-s-gdp-growth-jumps-to-7-8-in-q4-fy24-growth-at-8-2-124053100744_1.html" class="news-link" target="_blank">Read more →</a>
+        </div>
+
+        <div class="news-card">
+            <h3 class="news-title">SEBI Proposes Stricter Norms for Algorithmic Trading to Protect Retail Investors</h3>
+            <div class="news-meta">
+                <span class="news-source">Moneycontrol</span>
+                <span class="news-date">June 5, 2024</span>
+            </div>
+            <p class="news-excerpt">Markets regulator SEBI has proposed additional disclosures and risk management measures for algo trading to ensure fair play and protect small investors.</p>
+            <a href="https://www.moneycontrol.com/news/business/markets/sebi-proposes-stricter-norms-for-algorithmic-trading-to-protect-retail-investors-article-11757661.html" class="news-link" target="_blank">Read more →</a>
+        </div>
+    </div>
+</div>
 
 
 

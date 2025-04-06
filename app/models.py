@@ -137,3 +137,33 @@ class AnomalousTransaction(models.Model):
 
     class Meta:
         ordering = ['-date']
+
+
+### 📌 Model 7: Portfolio (User Investments)
+class Portfolio(models.Model):
+    INVESTMENT_CHOICES = [
+        ("Stocks", "Stocks"),
+        ("Bonds", "Bonds"),
+        ("Real Estate", "Real Estate"),
+        ("Crypto", "Crypto"),
+        ("Gold", "Gold"),
+        ("Mutual Funds", "Mutual Funds"),
+        ("Money Market", "Money Market"),
+        ("Others", "Others"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to Django's User model
+    investment_type = models.CharField(max_length=50, choices=INVESTMENT_CHOICES)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    date = models.DateField()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.investment_type} - ₹{self.amount}"
+    
+    @classmethod
+    def get_total_portfolio_value(cls, user):
+        """
+        Returns the total portfolio value for the given user.
+        """
+        total = cls.objects.filter(user=user).aggregate(total_value=models.Sum('amount'))['total_value']
+        return total or 0.0  # Return 0.0 if no records exist

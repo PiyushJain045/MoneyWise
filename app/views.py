@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
-from .models import Transaction, Profile, UserAccount, MonthlyBudget, RecurringPayment, AnomalousTransaction
+from .models import Transaction, Profile, UserAccount, MonthlyBudget, RecurringPayment, AnomalousTransaction, Portfolio
 from django.contrib import messages
 
 
@@ -13,6 +13,7 @@ import base64
 import json
 import csv
 import numpy as np
+from collections import defaultdict
 
 #Graphs and visualization
 from django.utils import timezone
@@ -591,4 +592,51 @@ class Security(View):
                 }
             )        
        
+
+class Investments(View):
+    def get(self, request):
+        user = request.user
+        print("USER:", user)
+        portfolios = Portfolio.objects.filter(user=user)
+        total_value = Portfolio.get_total_portfolio_value(user)
+
+        # Group values by investment type
+        allocation_data = defaultdict(float)
+        for item in portfolios:
+            allocation_data[item.investment_type] += float(item.amount)  # corrected from current_value
+
+        # Prepare chart data
+        labels = []
+        values = []
+        formatted_data = []
+
+        for inv_type, value in allocation_data.items():
+            percent = round((float(value) / float(total_value)) * 100, 1) if total_value else 0
+
+            labels.append(inv_type)
+            values.append(value)
+            formatted_data.append({
+                'label': inv_type,
+                'value': value,
+                'percent': percent,
+                'formatted_value': f"₹{value:,.0f}"
+            })
+
+        context = {
+            'total_value': total_value,
+            'labels': labels,
+            'values': values,
+            'formatted_data': formatted_data,
+        }
+        print("Context", context)
+
+        return render(request, 'investments.html', context)
     
+    def post(self, request):
+        pass
+
+
+class Learn(View):
+    def get(self, request):
+        return render(request, "learn.html")
+

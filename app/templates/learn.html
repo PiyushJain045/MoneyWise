@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn - Financial Literacy</title>
+  <link rel="stylesheet" href="{% static 'css/learn.css' %}">
+</head>
+<body>
+  <section class="learn-section">
+    <h2>Financial Education</h2>
+    <p class="subheading">Courses, books, and resources to improve your financial literacy</p>
+
+    <input class="search-bar" type="text" placeholder="Search for courses, articles, or topics...">
+
+    <div class="topics">
+      <div class="topic" onclick="showContent('Investing')">
+        <div class="icon">📈</div>
+        <span>Investing</span>
+      </div>
+      <div class="topic" onclick="showContent('Budgeting')">
+        <div class="icon">📘</div>
+        <span>Budgeting</span>
+      </div>
+      <div class="topic" onclick="showContent('Trading')">
+        <div class="icon">💹</div>
+        <span>Trading</span>
+      </div>
+      <div class="topic" onclick="showContent('Taxes')">
+        <div class="icon">📄</div>
+        <span>Taxes</span>
+      </div>
+      <div class="topic" onclick="showContent('Real Estate')">
+        <div class="icon">🏠</div>
+        <span>Real Estate</span>
+      </div>
+      <div class="topic coming-soon">
+        <div class="icon">⏳</div>
+        <span>More Coming Soon</span>
+      </div>
+    </div>
+
+    <div id="content" class="content-area"></div>
+  </section>
+
+  <script>
+    const data = {
+      'Investing': [
+        { title: 'Intro to Stocks', duration: '4 weeks', level: 'Beginner' },
+        { title: 'ETF Investing', duration: '3 weeks', level: 'Intermediate' },
+        { title: 'The Intelligent Investor', type: 'Book' }
+      ],
+      'Budgeting': [
+        { title: 'Mastering Monthly Budgeting', duration: '2 weeks', level: 'Beginner' },
+        { title: 'Zero-Based Budgeting', duration: '1 week', level: 'Advanced' },
+        { title: 'Your Money or Your Life', type: 'Book' }
+      ],
+      'Trading': [
+        { title: 'Day Trading Basics', duration: '2 weeks', level: 'Beginner' },
+        { title: 'Options Trading', duration: '3 weeks', level: 'Advanced' },
+        { title: 'A Beginner's Guide to Forex Trading', type: 'Book' }
+      ],
+      'Taxes': [
+        { title: 'Tax Planning 101', duration: '1 week', level: 'Beginner' },
+        { title: 'Corporate Taxes Explained', duration: '2 weeks', level: 'Advanced' },
+        { title: 'J.K. Lasser's Your Income Tax Guide', type: 'Book' }
+      ],
+      'Real Estate': [
+        { title: 'Real Estate Investment', duration: '4 weeks', level: 'Intermediate' },
+        { title: 'Buying Your First Home', duration: '2 weeks', level: 'Beginner' },
+        { title: 'Rich Dad Poor Dad', type: 'Book' }
+      ]
+    };
+
+    function showContent(topic) {
+      const content = document.getElementById('content');
+      content.innerHTML = '';
+
+      data[topic].forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'card';
+
+        if (item.type === 'Book') {
+          div.innerHTML = `<h4>📚 ${item.title}</h4><p>Type: Book</p>`;
+        } else {
+          div.innerHTML = `
+            <h4>${item.title}</h4>
+            <p>Duration: ${item.duration}</p>
+            <p>Level: ${item.level}</p>
+          `;
+        }
+
+        content.appendChild(div);
+      });
+    }
+  </script>
+
+  <script src="{% static 'js/learn.js' %}"></script>
+</body>
+</html>
