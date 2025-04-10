@@ -108,7 +108,7 @@
           labels: {{ labels|safe }},
           datasets: [{
             data: {{ values|safe }},
-            backgroundColor:'blue',
+            backgroundColor:{{ colors|safe }},
             borderWidth: 0
           }]
         },

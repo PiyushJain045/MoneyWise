@@ -597,6 +597,18 @@ class Security(View):
 
 class Investments(View):
     def get(self, request):
+
+        color_map = {
+            "Stocks": "#1E90FF",         # Blue
+            "Real Estate": "#FFA500",    # Orange
+            "Bonds": "#8A2BE2",          # Purple
+            "Crypto": "#FF69B4",         # Pink
+            "Mutual Funds": "green",   # Turquoise
+            "Gold": "#FFD700",           # Gold
+            "Other": "#A9A9A9"           # Default Gray
+        }
+
+
         user = request.user
         print("USER:", user)
         portfolios = Portfolio.objects.filter(user=user)
@@ -623,13 +635,17 @@ class Investments(View):
                 'percent': percent,
                 'formatted_value': f"₹{value:,.0f}"
             })
+            print("************", formatted_data)
+
+        colors = [color_map.get(label, "#CCCCCC") for label in labels]
 
         context = {
             'total_value': total_value,
             'labels': labels,
             'values': values,
             'formatted_data': formatted_data,
-            'has_data': bool(formatted_data)
+            'has_data': bool(formatted_data),
+            "colors": json.dumps(colors),
         }
         print("Context", context)
 

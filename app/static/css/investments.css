@@ -101,8 +101,11 @@ body {
   
   .stocks { background-color: #1E90FF; }
   .real-estate { background-color: #FFA500; }
+  .mutual-funds { background-color: green; }
   .bonds { background-color: #8A2BE2; }
   .crypto { background-color: #FF69B4; }
+  .gold { background-color: #FFD700; }
+
   
   #investmentForm {
     margin-top: 40px;
