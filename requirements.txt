@@ -12,3 +12,4 @@ dotenv
 ipykernel
 twilio
 bentoml==1.0.25
+openpyxl

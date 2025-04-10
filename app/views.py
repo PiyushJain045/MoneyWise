@@ -3,17 +3,19 @@ from django.http import JsonResponse
 from django.views import View
 from .models import Transaction, Profile, UserAccount, MonthlyBudget, RecurringPayment, AnomalousTransaction, Portfolio
 from django.contrib import messages
-
+from django.conf import settings
 
 #Misslaneous
 import os
-from django.conf import settings
 from datetime import datetime
+import datetime
 import base64
 import json
 import csv
 import numpy as np
+import pandas as pd
 from collections import defaultdict
+from decimal import Decimal
 
 #Graphs and visualization
 from django.utils import timezone
@@ -627,13 +629,84 @@ class Investments(View):
             'labels': labels,
             'values': values,
             'formatted_data': formatted_data,
+            'has_data': bool(formatted_data)
         }
         print("Context", context)
 
         return render(request, 'investments.html', context)
     
     def post(self, request):
-        pass
+        print("INSIDE POST")
+
+        if request.FILES.get("statement_file"):
+            print("INSIDE FILES")
+            statement_type = request.POST.get("statement_type")
+            broker = request.POST.get("broker")
+            file = request.FILES["statement_file"]
+            user = request.user
+
+            print("FILE:", file)
+
+            df = pd.read_excel(file, header=None)
+
+            print(df.head())
+
+            # Extract data based on statement type
+            invested_value = 0
+            unrealised_pnl = 0
+
+            try:
+                if statement_type == "Stocks":
+                    for index, row in df.iterrows():
+                        if pd.notna(row[0]):  # Check if cell is not empty
+                            if 'Invested Value' in str(row[0]):
+                                invested_value = Decimal(str(row[1]))
+                                print(invested_value)
+                            elif 'Unrealised P&L' in str(row[0]):
+                                unrealised_pnl = Decimal(str(row[1]))
+                                print(unrealised_pnl)
+
+                elif statement_type == "Mutual Funds":
+                    for index, row in df.iterrows():
+                        if pd.notna(row[0]):
+                             if 'Total Investments' in str(row[0]) and 'Current Portfolio Value' in str(row[1]):
+                                 
+                                 # The values are in the next row
+                                values_row = df.iloc[index + 1]
+                                invested_value = Decimal(str(values_row[0]))  # Total Investments column
+                                print(invested_value)
+                                current_value = Decimal(str(values_row[1]))  # Current Portfolio Value column
+                                unrealised_pnl = Decimal(str(values_row[2]))  # Profit/Loss column
+                                break
+                    
+                # Add more elifs as needed for other statement types
+
+            except Exception as e:
+                print("Error parsing Excel:", e)
+                return redirect("investment")
+            
+            Portfolio.objects.create(
+                user=user,
+                investment_type=statement_type,
+                amount=invested_value,
+                date= datetime.date.today() # You can make this optional in your model or add logic to extract from file
+            )
+
+# ****************************
+        else:
+            type = request.POST.get("investment_type")
+            amount= request.POST.get("amount")
+            date = request.POST.get("date")
+
+            Portfolio.objects.create(
+                user = request.user,
+                investment_type = type,
+                amount = amount,
+                date = date
+            )
+
+        
+        return redirect("investment")
 
 
 class Learn(View):

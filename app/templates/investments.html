@@ -25,6 +25,7 @@
           </div>
         </div>
       
+        {% if has_data %}
         <div class="allocation">
           <h3>Asset Allocation</h3>
           <p>Breakdown of your investment portfolio</p>
@@ -41,10 +42,13 @@
               {% endfor %}
             </ul>
           </div>
+          {% else %}
+          <p style="margin-top: 1rem; font-style: italic;">No investments added yet. Upload a statement or add an investment manually to see your portfolio breakdown.</p>
+        {% endif %}
         </div>
 
     <!-- Hidden Investment Form -->
-    <form id="investmentForm" class="hidden" method="POST" action="#">
+    <form id="investmentForm" class="hidden" method="POST" action="{% url 'investment' %}">
       {% csrf_token %}
       <h3>Add New Investment</h3>
       <label>Investment Type:</label>
@@ -70,26 +74,51 @@
     </form>
   </div>
 
+  <form method="POST" action="{% url 'investment' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h3>Upload Statement</h3>
+    
+    <label>Statement Type:</label>
+    <select name="statement_type" required>
+      <option value="Stocks">Stocks</option>
+      <option value="Mutual Funds">Mutual Funds</option>
+      ...
+    </select>
+  
+    <label>Broker:</label>
+    <select name="broker" required>
+      <option value="GROWW">GROWW</option>
+      <option value="Zerodha">Zerodha</option>
+      ...
+    </select>
+  
+    <label>Select File:</label>
+    <input type="file" name="statement_file" accept=".xlsx" required>
+  
+    <button type="submit">Upload</button>
+  </form>
+  
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const ctx = document.getElementById('pieChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Stocks', 'Real Estate', 'Bonds', 'Crypto'],
-        datasets: [{
-          data: [52, 18, 19, 10],
-          backgroundColor: ['#1E90FF', '#FFA500', '#8A2BE2', '#FF69B4'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        cutout: '65%',
-        plugins: {
-          legend: { display: false }
+      const ctx = document.getElementById('pieChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: {{ labels|safe }},
+          datasets: [{
+            data: {{ values|safe }},
+            backgroundColor:'blue',
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '65%',
+          plugins: {
+            legend: { display: false }
+          }
         }
-      }
-    });
+      });
 
     function toggleForm() {
       document.getElementById('investmentForm').classList.toggle('hidden');
