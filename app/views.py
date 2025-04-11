@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.http import JsonResponse
 from django.views import View
 from .models import Transaction, Profile, UserAccount, MonthlyBudget, RecurringPayment, AnomalousTransaction, Portfolio
@@ -332,11 +332,19 @@ class FinancialReport(View):
         report = generate_financial_report(user)
         # print(report)  # Debugging: Print report to check content
 
-        prompt = f'''You are being used in a personal finance management app. Here is the financial report of a user:  
-        {report}  
+        prompt = f'''   
+                    You are a financial advisor in a personal finance app. Analyze the user's financial report below and provide concise, actionable advice.  
 
-        Based on this, provide financial advice(in a well formated manner). analuze the profile throughly and provide some great caring advice based on their age,country and profession.  
-        If the user ends up saving some money, also provide advice where they can invest this money based on the saved amount. Also recommend the 'Stock Tracking' feature. of our app if needed. And finally dont include markdown. just give simple text'''  
+                    **User Report:**  
+                    {report}  
+
+                    **Guidelines:**  
+                    1. Consider age, country, and profession for tailored advice.   
+                    3. Skip markdown—use plain text with a line break after each point.  
+                    4. If savings exist, suggest investment options based on the saved amount.  
+                    5. Recommend the app’s *Stock Tracking* feature if relevant.  
+                    6. Keep advice strictly based on the report—no assumptions. 
+                    7. Also include few emojis '''  
 
         try:
             # Ask Gemini for Advice
@@ -355,12 +363,55 @@ class FinancialReport(View):
         formatted_report = report.replace("\n", "<br>")  # Convert newlines to HTML <br>
 
         # ✅ Fix: Format AI advice as bullet points
-        formatted_advice = advice.replace("* ", "<li>").replace("\n", "</li>") + "</li>"
+        # Split advice by newlines and convert to HTML list
+        advice_points = [point.strip() for point in advice.split('\n') if point.strip()]
+        formatted_advice = "<ul>" + "".join(f"<li>{point}</li>" for point in advice_points) + "</ul>"
 
         return render(request, "financialReport.html", {"report": formatted_report, "advice": formatted_advice})
 
     def post(self, request):
-        pass
+        print("INSIDE AI POST")
+
+        report = generate_financial_report(request.user)
+
+        user_message = request.POST.get('user_message', '')
+        print(user_message)
+
+        prompt = f'''**Context:**
+                    You are a friendly financial assistant in a Finance Management web app. The user has just received their financial report and initial advice, but may still have questions or need clarification.
+
+                    **User's Financial Report:**
+                    {report}
+
+                    **Your Role:**
+                    1. Maintain a conversational, friendly tone - act as a helpful financial friend
+                    2. Keep responses concise (5-6 sentences maximum unless complex questions require more)
+                    3. Remember previous chat history for context
+                    4. Focus on being practical and actionable
+                    5. When appropriate, reference specific parts of their report
+
+                    **Current User Message:**
+                    "{user_message}"
+
+                    **Response Guidelines:**
+                    - Acknowledge their question/concern
+                    - Provide clear, specific advice
+                    - Use simple financial terms (explain if needed)
+                    - Offer encouragement when appropriate
+                    - Suggest next steps if relevant
+
+                    **Example Good Response:**
+                    "I see you're concerned about your savings. Based on your report, you're doing well with expenses but could boost savings by 15%. Let's look at three easy 
+                    ways to do this..."'''
+    
+        response = model.generate_content(prompt)
+        print("RESPONSE:", response)
+
+        ai_response = response.candidates[0].content.parts[0].text
+        print("Extracted Text:", ai_response)
+        
+        # Return the response as HTML that HTMX will insert
+        return HttpResponse(f'<div class="message bot-message">{ai_response}</div>')
 
 
 class AiReceipt(View):

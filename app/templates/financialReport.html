@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Report</title>
     <link rel="stylesheet" href="static\css\financialReport.css">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
 </head>
 <body>
     <div class="layout">
@@ -80,37 +81,84 @@
             </div>
         </div>
 
-        <!-- Right Chat Section -->
-        <div class="chat-container">
-            <div class="chat-header">
-                <svg class="bot-avatar" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="11" fill="#ffffff"/>
-                    <circle cx="8" cy="10" r="2" fill="#007bff"/>
-                    <circle cx="16" cy="10" r="2" fill="#007bff"/>
-                    <path d="M8 16 Q12 20 16 16" stroke="#007bff" stroke-width="2" fill="none"/>
-                    <circle cx="12" cy="12" r="10" stroke="#007bff" stroke-width="2" fill="none"/>
-                </svg>
-                Financial Assistant
-            </div>
-            <div class="chat-messages">
-                <div class="message bot-message">
-                    Hello! I'm your financial assistant. Here are some questions you might want to ask:
-                    
-                    <div class="quick-questions">
-                        <div class="quick-question">How can I save more?</div>
-                        <div class="quick-question">Investment tips</div>
-                        <div class="quick-question">Emergency fund advice</div>
-                    </div>
-                </div>
-            </div>
-            <div class="chat-input">
-                <form>
-                    <input type="text" placeholder="Ask about financial advice...">
-                    <button aria-label="Send message">Send</button>
-                </form>
+<!-- Right Chat Section -->
+<div class="chat-container">
+    <div class="chat-header">
+        <svg class="bot-avatar" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="11" fill="#ffffff"/>
+            <circle cx="8" cy="10" r="2" fill="#007bff"/>
+            <circle cx="16" cy="10" r="2" fill="#007bff"/>
+            <path d="M8 16 Q12 20 16 16" stroke="#007bff" stroke-width="2" fill="none"/>
+            <circle cx="12" cy="12" r="10" stroke="#007bff" stroke-width="2" fill="none"/>
+        </svg>
+        Financial Assistant
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        <!-- Another Bot Message -->
+        <div class="message bot-message">
+            Hello! I'm your financial assistant. Here are some questions you might want to ask:
+            
+            <div class="quick-questions">
+                <div class="quick-question">How can I save more?</div>
+                <div class="quick-question">Investment tips</div>
+                <div class="quick-question">Emergency fund advice</div>
             </div>
         </div>
-    </div>
-</body>
 
+        <!-- User Message (right side, green background) -->
+        <div class="message user-message">
+            Here's my financial question about saving strategies.
+        </div>
+
+         <!-- Another Bot Message -->
+        <div class="message bot-message">
+            Here's my response to your question about savings...
+        </div>
+    </div>
+    <div class="chat-input">
+        <form id="chat-form" hx-post="{% url 'financial-report' %}" hx-target="#chat-messages" hx-swap="beforeend">
+            {% csrf_token %}
+            <input type="text" id="user-message" name="user_message" placeholder="Ask about financial advice..." required>
+            <button type="submit" aria-label="Send message">Send</button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatForm = document.getElementById('chat-form');
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-message');
+    
+    // HTMX will handle the form submission, but we still need to add the user message
+    chatForm.addEventListener('submit', function(e) {
+        const userMessage = userInput.value.trim();
+        
+        if (userMessage) {
+            // Create a new user message element
+            const userMessageElement = document.createElement('div');
+            userMessageElement.className = 'message user-message';
+            userMessageElement.textContent = userMessage;
+            
+            // Append the new message to the chat container
+            chatMessages.appendChild(userMessageElement);
+            
+            // Clear the input field
+            userInput.value = '';
+            
+            // Scroll to the bottom of the chat
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    });
+
+    // Handle HTMX after request completion to scroll to bottom
+    document.body.addEventListener('htmx:afterRequest', function(evt) {
+        if (evt.detail.elt.id === 'chat-form') {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    });
+});
+</script>
+
+</body>
 </html>

@@ -23,8 +23,9 @@ def generate_financial_report(user):
         user_details = f"User Profile:\n- Age: {age}\n- Profession: {profession}\n- Country: {country}\n"
 
         # Get latest balance from the most recent transaction
-        latest_transaction = Transaction.objects.order_by("-date").first()
+        latest_transaction = Transaction.objects.order_by("-id").first()
         current_balance = latest_transaction.balance_amount if latest_transaction else 0
+
 
         # Fetch all transactions (for all users, since user filtering is not needed yet)
         transactions = Transaction.objects.all()
