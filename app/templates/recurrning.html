@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recurring Payments | Finance Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation Link */
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-weight: 500;
+            box-shadow: var(--box-shadow);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table Styles */
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .payment-table th, .payment-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .payment-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .payment-table tr:not(:first-child):hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .payment-table .type-DR {
+            color: var(--danger);
+            font-weight: 500;
+        }
+
+        .payment-table .type-CR {
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        /* Message Styles */
+        .message {
+            text-align: center;
+            padding: 1rem;
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: var(--box-shadow);
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .payment-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2><i class="fas fa-calendar-alt"></i> Recurring Payments</h2>
+            <a href="{% url 'dashboard' %}" class="nav-link">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        {% if message %}
+            <div class="message">
+                <i class="fas fa-exclamation-circle"></i> {{ message }}
+            </div>
+        {% else %}
+            <div class="card">
+                <h3><i class="fas fa-list"></i> Scheduled Payments</h3>
+                <table class="payment-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount (₹)</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Payment Day</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in recurring_payments %}
+                            <tr>
+                                <td>{{ payment.name }}</td>
+                                <td>₹{{ payment.amount }}</td>
+                                <td>{{ payment.category }}</td>
+                                <td class="type-{{ payment.type }}">{{ payment.get_type_display }}</td>
+                                <td>{{ payment.date }}<sup>th</sup></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+        <div class="card form-container">
+            <h3><i class="fas fa-plus-circle"></i> Add New Recurring Payment</h3>
+            <form method="POST" action="{% url 'recurring' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Payment Name</label>
+                    <input type="text" id="name" name="name" placeholder="e.g. Netflix Subscription" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount (₹)</label>
+                    <input type="number" id="amount" name="amount" step="0.01" placeholder="0.00" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="" disabled selected>Select a Category</option>
+                        <option value="Food & Dining">Food & Dining</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Banking & Transfers">Banking & Transfers</option>
+                        <option value="Utilities & Bills">Utilities & Bills</option>
+                        <option value="Health & Fitness">Health & Fitness</option>
+                        <option value="Education">Education</option>
+                        <option value="Rent & Housing">Rent & Housing</option>
+                        <option value="Friend/Family">Friend/Family</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Transaction Type</label>
+                    <select id="type" name="type" required>
+                        <option value="DR">Debit (Payment Out)</option>
+                        <option value="CR">Credit (Payment In)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Payment Day of Month (1-31)</label>
+                    <input type="number" id="date" name="date" min="1" max="31" placeholder="e.g. 5 for 5th of each month" required>
+                </div>
+
+                <button type="submit" class="btn">
+                    <i class="fas fa-save"></i> Save Recurring Payment
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

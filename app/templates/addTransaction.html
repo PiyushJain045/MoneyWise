@@ -1,0 +1,463 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Transaction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --white: #ffffff;
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-weight: 500;
+            box-shadow: var(--box-shadow);
+        }
+
+        .nav-link:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: var(--box-shadow);
+            
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn-danger:hover {
+            background-color: #e5177a;
+            transform: translateY(-2px);
+        }
+
+        .file-upload {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .file-upload-input {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            border: 2px dashed var(--light-gray);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--primary);
+        }
+
+        .file-upload-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-text {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .divider::before {
+            margin-right: 1rem;
+        }
+
+        .divider::after {
+            margin-left: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover::after {
+            opacity: 1;
+        }
+        
+        {% comment %} /* Remove the individual button color classes since all buttons will use gradient */ {% endcomment %}
+        .btn-primary, .btn-danger {
+            /* These will inherit from .btn now */
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Add Transaction</h2>
+            <a href="{% url 'dashboard' %}" class="nav-link">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="card-container">
+            <!-- AI Receipt Upload Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="card-title">AI Receipt Processing</div>
+                </div>
+                
+                <form id="uploadReceiptForm" method="POST" action="{% url 'ai-receipt' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="file-upload">
+                        <input type="file" id="receiptImage" class="file-upload-input" name="receiptImage" accept="image/*,application/pdf" required>
+                        <label for="receiptImage" class="file-upload-label">
+                            <div class="file-upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="file-upload-text">
+                                <strong>Click to upload receipt</strong><br>
+                                (Supports JPG, PNG, PDF)
+                            </div>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-magic"></i> Let AI Read Your Receipt
+                    </button>
+                </form>
+
+                {% if error %}
+                <div style="color: var(--danger); margin-top: 1rem; padding: 0.75rem; background-color: rgba(247, 37, 133, 0.1); border-radius: var(--border-radius);">
+                    <i class="fas fa-exclamation-circle"></i> {{ error }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Manual Transaction Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-pen"></i>
+                    </div>
+                    <div class="card-title">Manual Transaction Entry</div>
+                </div>
+                
+                <form id="transactionForm" method="POST" action="{% url 'add-transaction' %}" onsubmit="return validateForm()">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" value="{{ date }}" required>
+                        <div class="error-message" id="date-error">Please select a valid date.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="transaction_amount">Amount (₹)</label>
+                        <input type="number" id="transaction_amount" name="transaction_amount" step="0.01" value="{{ transaction_amount }}" placeholder="0.00" required>
+                        <div class="error-message" id="amount-error">Please enter a valid positive amount.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Transaction Type</label>
+                        <select id="type" name="type" required>
+                            <option value="">-- Select Type --</option>
+                            <option value="CR" {% if type == "CR" %}selected{% endif %}>Credit</option>
+                            <option value="DR" {% if type == "DR" %}selected{% endif %}>Debit</option>
+                        </select>
+                        <div class="error-message" id="type-error">Please select a transaction type.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipient">Recipient</label>
+                        <input type="text" id="recipient" name="recipient" value="{{ recipient }}" placeholder="Enter recipient name" required>
+                        <div class="error-message" id="recipient-error">Recipient name cannot be empty.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="Food & Dining" {% if category == "Food & Dining" %}selected{% endif %}>Food & Dining</option>
+                            <option value="Shopping" {% if category == "Shopping" %}selected{% endif %}>Shopping</option>
+                            <option value="Entertainment" {% if category == "Entertainment" %}selected{% endif %}>Entertainment</option>
+                            <option value="Health & Fitness" {% if category == "Health & Fitness" %}selected{% endif %}>Health & Fitness</option>
+                            <option value="Transport" {% if category == "Transport" %}selected{% endif %}>Transport</option>
+                            <option value="Utilities & Bills" {% if category == "Utilities & Bills" %}selected{% endif %}>Utilities & Bills</option>
+                            <option value="Rent & Housing" {% if category == "Rent & Housing" %}selected{% endif %}>Rent & Housing</option>
+                            <option value="Banking & Transfers" {% if category == "Banking & Transfers" %}selected{% endif %}>Banking & Transfers</option>
+                            <option value="Education" {% if category == "Education" %}selected{% endif %}>Education</option>
+                            <option value="Friend/Family" {% if category == "Friend/Family" %}selected{% endif %}>Friend/Family</option>
+                            <option value="Other" {% if category == "Other" %}selected{% endif %}>Other</option>
+                        </select>
+                        <div class="error-message" id="category-error">Please select a category.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> Add Transaction
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            let isValid = true;
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            // Validate date
+            const date = document.getElementById("date").value;
+            if (!date) {
+                document.getElementById("date-error").style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate transaction amount
+            const transactionAmount = document.getElementById("transaction_amount").value;
+            if (!transactionAmount || transactionAmount <= 0) {
+                document.getElementById("amount-error").style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate transaction type
+            const type = document.getElementById("type").value;
+            if (!type) {
+                document.getElementById("type-error").style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate recipient
+            const recipient = document.getElementById("recipient").value.trim();
+            if (recipient === "") {
+                document.getElementById("recipient-error").style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate category
+            const category = document.getElementById("category").value;
+            if (!category) {
+                document.getElementById("category-error").style.display = 'block';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Enhance file input display
+        document.getElementById('receiptImage').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'No file chosen';
+            const label = document.querySelector('.file-upload-text');
+            if (label) {
+                label.innerHTML = `<strong>${fileName}</strong>`;
+            }
+        });
+    </script>
+</body>
+</html>

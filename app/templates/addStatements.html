@@ -1,0 +1,742 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Bank Statement | Finance Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.05) 0%, rgba(67, 97, 238, 0.05) 90%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            padding: 2rem;
+        }
+
+        .upload-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Upload Card */
+        .upload-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            align-self: flex-start;
+        }
+
+        .upload-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+
+        .upload-card h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .upload-card h2 i {
+            margin-right: 12px;
+            color: var(--primary);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        select:focus, input[type="file"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        /* File Upload Dropzone */
+        .file-dropzone {
+            border: 2px dashed var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+
+        .file-dropzone:hover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+
+        .file-dropzone.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .file-dropzone i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .file-dropzone p {
+            margin-bottom: 0.5rem;
+            color: var(--gray);
+        }
+
+        .file-dropzone .file-name {
+            font-weight: 500;
+            color: var(--dark);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn i {
+            margin-right: 10px;
+        }
+
+        /* Messages */
+        .message {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .message i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .success {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .error {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Bank Preview */
+        .bank-preview {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: rgba(67, 97, 238, 0.05);
+            border-radius: var(--border-radius);
+        }
+
+        .bank-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .bank-logo i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .bank-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+            color: var(--dark);
+        }
+
+        .bank-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Instructions Panel */
+        .instructions-panel {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2.5rem;
+            height: 100%;
+            position: sticky;
+            top: 1rem;
+        }
+
+        .instructions-panel h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .instructions-panel h2 i {
+            margin-right: 12px;
+            color: var(--primary);
+        }
+
+        .instructions-list {
+            list-style: none;
+        }
+
+        .instructions-list li {
+            margin-bottom: 1.25rem;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .instructions-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+
+        .supported-banks {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .supported-banks h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .bank-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .bank-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: var(--light);
+            border-radius: 8px;
+        }
+
+        .bank-item i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: var(--dark);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            color: var(--gray);
+            font-size: 0.9rem;
+            max-width: 300px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 6px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Processing animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .processing {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .upload-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .instructions-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .upload-card, .instructions-panel {
+                padding: 1.5rem;
+            }
+            
+            .bank-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-bar {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <i class="fas fa-piggy-bank"></i>
+            <span>Finance Manager</span>
+        </div>
+        <a href="{% url 'home' %}" class="nav-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </header>
+
+    <main class="main-content">
+        <div class="upload-container">
+            <div class="upload-card">
+                <h2><i class="fas fa-file-import"></i> Upload Bank Statement</h2>
+                
+                {% if success %}
+                    <div class="message success">
+                        <i class="fas fa-check-circle"></i> {{ success }}
+                    </div>
+                {% endif %}
+
+                {% if error %}
+                    <div class="message error">
+                        <i class="fas fa-exclamation-circle"></i> {{ error }}
+                    </div>
+                {% endif %}
+
+                <div class="bank-preview" id="bankPreview">
+                    <div class="bank-logo">
+                        <i class="fas fa-university" id="bankIcon"></i>
+                    </div>
+                    <div class="bank-info">
+                        <h3 id="bankName">Select your bank</h3>
+                        <p>Supported formats: CSV</p>
+                    </div>
+                </div>
+
+                <form action="{% url 'add-statements' %}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="bank">Bank</label>
+                        <select id="bank" name="bank" required onchange="updateBankPreview()">
+                            <option value="" disabled selected>-- Select your bank --</option>
+                            <option value="BOI" data-icon="bank">Bank of India</option>
+                            <!-- <option value="SBI" data-icon="bank">State Bank of India</option>
+                            <option value="HDFC" data-icon="bank">HDFC Bank</option>
+                            <option value="ICICI" data-icon="bank">ICICI Bank</option>
+                            <option value="AXIS" data-icon="bank">Axis Bank</option>
+                            <option value="OTHER" data-icon="university">Other Bank</option> -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="csvFile">Statement File</label>
+                        <div class="file-dropzone" id="dropZone">
+                            <i class="fas fa-file-csv"></i>
+                            <p>Drag & drop your CSV file here</p>
+                            <p>or click to browse files</p>
+                            <div class="file-name" id="fileName"></div>
+                            <input type="file" id="csvFile" name="csvFile" accept=".csv" required style="display: none;">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">
+                        <i class="fas fa-upload"></i> Upload Statement
+                    </button>
+                </form>
+            </div>
+
+            <div class="instructions-panel">
+                <h2><i class="fas fa-info-circle"></i> Upload Guidelines</h2>
+                <ul class="instructions-list">
+                    <li>Select your bank from the dropdown menu to ensure proper formatting</li>
+                    <li>Upload CSV statement with at least 30 days of transaction history</li>
+                    <li>For best results, provide 3-6 months of transaction data</li>
+                    <li>Ensure your statement includes date, description, and amount columns</li>
+                    <li>Files must be in standard CSV format (comma separated values)</li>
+                    <li>We automatically categorize your transactions after upload</li>
+                </ul>
+
+                <div class="supported-banks">
+                    <h3>Supported Banks:</h3>
+                    <div class="bank-grid">
+                        <div class="bank-item">
+                            <i class="fas fa-bank"></i> Bank of India
+                        </div>
+                        <div class="bank-item">
+                            <i class="fas fa-bank"></i> State Bank of India
+                        </div>
+                        <div class="bank-item">
+                            <i class="fas fa-bank"></i> HDFC Bank
+                        </div>
+                        <div class="bank-item">
+                            <i class="fas fa-bank"></i> ICICI Bank
+                        </div>
+                        <div class="bank-item">
+                            <i class="fas fa-bank"></i> Axis Bank
+                        </div>
+                        <div class="bank-item">
+                            <i class="fas fa-university"></i> Other Banks
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+        <div class="loading-text" id="loadingText">Processing Your Statement</div>
+        <div class="loading-subtext">This may take a few moments depending on file size</div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+    </div>
+
+    <script>
+        // Update bank preview when selection changes
+        function updateBankPreview() {
+            const select = document.getElementById('bank');
+            const selectedOption = select.options[select.selectedIndex];
+            const bankName = selectedOption.text;
+            const bankIcon = selectedOption.getAttribute('data-icon');
+            
+            document.getElementById('bankName').textContent = bankName;
+            document.getElementById('bankIcon').className = `fas fa-${bankIcon}`;
+        }
+
+        // File upload dropzone functionality
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('csvFile');
+        const fileName = document.getElementById('fileName');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const progressBar = document.getElementById('progressBar');
+        const uploadForm = document.getElementById('uploadForm');
+
+        // Click on dropzone triggers file input
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle file selection
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                const file = fileInput.files[0];
+                fileName.textContent = file.name;
+                fileName.style.display = 'block';
+                dropZone.classList.add('active');
+            }
+        });
+
+        // Drag and drop functionality
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropZone.classList.add('active');
+        }
+
+        function unhighlight() {
+            dropZone.classList.remove('active');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length) {
+                fileInput.files = files;
+                fileName.textContent = files[0].name;
+                fileName.style.display = 'block';
+            }
+        }
+
+        // Form submission with loading overlay
+        uploadForm.addEventListener('submit', function(e) {
+            // Only show loader if file is selected
+            if (fileInput.files.length) {
+                e.preventDefault(); // Prevent immediate form submission
+                showLoader();
+                
+                // Simulate progress (in real app, you'd use actual upload progress)
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 90) {
+                        clearInterval(progressInterval);
+                        // Submit the form after reaching 90% progress
+                        setTimeout(() => {
+                            uploadForm.submit();
+                        }, 500);
+                    }
+                    updateProgress(progress);
+                }, 300);
+            }
+        });
+
+        function showLoader() {
+            loadingOverlay.classList.add('active');
+            loadingText.textContent = "Processing Your Statement";
+        }
+
+        function updateProgress(percent) {
+            progressBar.style.width = `${percent}%`;
+            
+            // Update text based on progress
+            if (percent < 30) {
+                loadingText.textContent = "Uploading File...";
+            } else if (percent < 70) {
+                loadingText.textContent = "Analyzing Transactions...";
+            } else {
+                loadingText.textContent = "Finalizing...";
+                loadingText.classList.add('processing');
+            }
+        }
+
+        // Hide loader when page finishes loading (for demo purposes)
+        // In a real application, you would hide it when the server responds
+        window.addEventListener('load', function() {
+            loadingOverlay.classList.remove('active');
+            loadingText.classList.remove('processing');
+            progressBar.style.width = '0%';
+        });
+    </script>
+</body>
+</html>

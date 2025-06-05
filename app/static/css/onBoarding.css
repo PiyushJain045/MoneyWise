@@ -1,0 +1,259 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navigation Link */
+.nav-link {
+    display: inline-block;
+    margin: 20px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #0056b3;
+}
+
+/* Profile Container */
+.edit {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+.edit h2 {
+    font-size: 2em;
+    color: #007bff;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+.edit h3 {
+    font-size: 1.5em;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+/* Profile Information */
+.edit p {
+    font-size: 1.1em;
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.edit p strong {
+    color: #555;
+}
+
+/* Profile Photo */
+.edit img {
+    display: block;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Edit Button */
+.edit button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit button:hover {
+    background-color: #218838;
+}
+
+/* Error Message */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .edit {
+        padding: 15px;
+    }
+
+    .edit h2 {
+        font-size: 1.8em;
+    }
+
+    .edit h3 {
+        font-size: 1.3em;
+    }
+
+    .edit p {
+        font-size: 1em;
+    }
+
+    .edit button {
+        width: 100%;
+        padding: 12px;
+        font-size: 1em;
+    }
+}
+
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Form Container */
+#onboardingForm {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+#onboardingForm h2 {
+    font-size: 2em;
+    color: #007bff;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+#onboardingForm h3 {
+    font-size: 1.5em;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+/* Labels */
+#onboardingForm label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Input and Select Fields */
+#onboardingForm input[type="text"],
+#onboardingForm input[type="number"],
+#onboardingForm input[type="email"],
+#onboardingForm input[type="tel"],
+#onboardingForm input[type="file"],
+#onboardingForm select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+#onboardingForm input[readonly] {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* File Input */
+#onboardingForm input[type="file"] {
+    padding: 8px;
+    background-color: #fff;
+}
+
+/* Select Dropdown */
+#onboardingForm select {
+    appearance: none;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+
+/* Submit Button */
+#onboardingForm button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+#onboardingForm button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Error Messages */
+#onboardingForm .error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #onboardingForm {
+        padding: 15px;
+    }
+
+    #onboardingForm h2 {
+        font-size: 1.8em;
+    }
+
+    #onboardingForm h3 {
+        font-size: 1.3em;
+    }
+
+    #onboardingForm input[type="text"],
+    #onboardingForm input[type="number"],
+    #onboardingForm input[type="email"],
+    #onboardingForm input[type="tel"],
+    #onboardingForm select {
+        font-size: 0.9em;
+    }
+
+    #onboardingForm button[type="submit"] {
+        font-size: 1em;
+    }
+}

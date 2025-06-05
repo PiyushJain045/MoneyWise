@@ -1,0 +1,389 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock News | Portfolio Tracker</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="{% static 'news.css' %}">
+    <style>
+        /* Base Styles */
+:root {
+    --primary-color: #2962ff;
+    --primary-dark: #0039cb;
+    --secondary-color: #455a64;
+    --light-gray: #f5f7fa;
+    --medium-gray: #e0e0e0;
+    --dark-gray: #757575;
+    --white: #ffffff;
+    --error-color: #d32f2f;
+    --font-main: 'Roboto', sans-serif;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: #212121;
+    background-color: var(--light-gray);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+.app-header {
+    background-color: var(--white);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.app-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.main-nav li {
+    margin-left: 30px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-weight: 500;
+    padding: 5px 0;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.nav-link.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* Page Header Styles */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.greeting h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: var(--secondary-color);
+}
+
+.current-date {
+    color: var(--dark-gray);
+    margin: 5px 0 0;
+}
+
+.btn-refresh {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.btn-refresh:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-refresh .icon {
+    margin-right: 8px;
+}
+
+/* News Section Styles */
+.section-title {
+    font-size: 1.3rem;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.news-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    padding: 15px 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.company-name {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.market-status {
+    font-size: 0.8rem;
+    background-color: rgba(255,255,255,0.2);
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+
+.news-items {
+    padding: 20px;
+}
+
+.news-item {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+.news-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.news-source {
+    font-size: 0.8rem;
+    color: var(--dark-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.news-title {
+    font-size: 1rem;
+    margin: 0 0 10px;
+    color: var(--secondary-color);
+}
+
+.news-excerpt {
+    font-size: 0.9rem;
+    color: #424242;
+    margin: 0 0 12px;
+}
+
+.read-more {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.read-more:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.holiday-message {
+    padding: 20px;
+    text-align: center;
+    color: var(--dark-gray);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    opacity: 0.6;
+}
+
+.empty-state h4 {
+    margin: 0 0 10px;
+    color: var(--secondary-color);
+}
+
+.empty-state p {
+    color: var(--dark-gray);
+    margin: 0;
+}
+
+/* Footer Styles */
+.app-footer {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+.app-footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    text-align: center;
+    opacity: 0.8;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+    }
+    
+    .main-nav ul {
+        margin-top: 15px;
+    }
+    
+    .main-nav li {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .btn-refresh {
+        margin-top: 15px;
+    }
+    
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="app-logo">Portfolio Tracker</h1>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a></li>
+                        <li><a href="{% url 'st_allstocks' %}" class="nav-link">My Portfolio</a></li>
+                        <li><a href="{% url 'st_stocknews' %}" class="nav-link active">Market News</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div class="greeting">
+                <h2>Welcome back, {{ name }}</h2>
+                <p class="current-date">{{ current_date|date:"F j, Y" }}</p>
+            </div>
+            <form method="post" action="{% url 'st_stocknews' %}" class="refresh-form">
+                {% csrf_token %}
+                <button type="submit" class="btn-refresh">
+                    <span class="icon">⟳</span> Refresh News
+                </button>
+            </form> 
+        </div>
+
+        <section class="news-section">
+            <h3 class="section-title">Today's Market Headlines</h3>
+            
+            {% if data_collected %}
+                <div class="news-grid">
+                    {% for news in news_data %}
+                    <article class="news-card">
+                        <div class="card-header">
+                            <h4 class="company-name">{{ news.company_name }}</h4>
+                            {% if news.its_holiday %}
+                                <span class="market-status">Market Holiday</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if not news.its_holiday %}
+                        <div class="news-items">
+                            <div class="news-item">
+                                <div class="news-source">{{ news.source }}</div>
+                                <h5 class="news-title">{{ news.news1.title }}</h5>
+                                <p class="news-excerpt">{{ news.news1.content|truncatewords:30 }}</p>
+                                <a href="{{ news.news1.url }}" target="_blank" class="read-more">Read full story →</a>
+                            </div>
+                            
+                            <div class="news-item">
+                                <div class="news-source">{{ news.source }}</div>
+                                <h5 class="news-title">{{ news.news2.title }}</h5>
+                                <p class="news-excerpt">{{ news.news2.content|truncatewords:30 }}</p>
+                                <a href="{{ news.news2.url }}" target="_blank" class="read-more">Read full story →</a>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="holiday-message">
+                            <p>No trading today. Markets are closed for holiday.</p>
+                        </div>
+                        {% endif %}
+                    </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📰</div>
+                    <h4>No news data available</h4>
+                    <p>Click the refresh button to fetch the latest market news</p>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    {% comment %} <footer class="app-footer">
+        <div class="container">
+            <p>© 2023 Portfolio Tracker. All market data provided for informational purposes only.</p>
+        </div>
+    </footer> {% endcomment %}
+</body>
+</html>

@@ -1,0 +1,370 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding</title>
+    <style>
+            :root {
+                --primary: #4361ee;
+                --primary-dark: #3a56d4;
+                --secondary: #3f37c9;
+                --light: #f8f9fa;
+                --dark: #212529;
+                --gray: #6c757d;
+                --light-gray: #e9ecef;
+                --success: #4bb543;
+                --error: #ff3333;
+            }
+            
+            body {
+                font-family: 'Inter', sans-serif;
+                line-height: 1.6;
+                color: var(--dark);
+                background-color: #f5f7ff;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            
+            .nav-bar {
+                background-color: white;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                padding: 15px 0;
+                margin-bottom: 30px;
+            }
+            
+            .nav-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+            
+            .nav-link {
+                color: var(--primary);
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .nav-link:hover {
+                color: var(--primary-dark);
+            }
+            
+            .profile-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+            
+            .profile-section {
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                padding: 25px;
+                margin-bottom: 30px;
+            }
+            
+            .section-title {
+                color: var(--primary);
+                margin-top: 0;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid var(--light-gray);
+            }
+            
+            .info-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+            
+            .info-item {
+                margin-bottom: 15px;
+            }
+            
+            .info-label {
+                font-weight: 500;
+                color: var(--gray);
+                margin-bottom: 5px;
+                font-size: 14px;
+            }
+            
+            .info-value {
+                font-weight: 600;
+                color: var(--dark);
+                font-size: 16px;
+            }
+            
+            .profile-photo {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid var(--light-gray);
+                margin-bottom: 15px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                border-radius: 6px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s;
+                border: none;
+                font-size: 14px;
+            }
+            
+            .btn-primary {
+                background-color: var(--primary);
+                color: white;
+            }
+            
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-2px);
+            }
+            
+            .btn-secondary {
+                background-color: var(--light-gray);
+                color: var(--dark);
+            }
+            
+            .btn-secondary:hover {
+                background-color: #d1d7e0;
+            }
+            
+            .action-buttons {
+                display: flex;
+                gap: 15px;
+                margin-top: 25px;
+            }
+            
+            .goals-list {
+                list-style: none;
+                padding: 0;
+            }
+            
+            .goal-item {
+                background-color: var(--light);
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .goal-progress {
+                width: 100%;
+                height: 8px;
+                background-color: var(--light-gray);
+                border-radius: 4px;
+                margin-top: 10px;
+                overflow: hidden;
+            }
+            
+            .progress-bar {
+                height: 100%;
+                background-color: var(--primary);
+                border-radius: 4px;
+            }
+            
+            .no-photo {
+                color: var(--gray);
+                font-style: italic;
+            }
+            
+            .error {
+                color: var(--error);
+                font-size: 14px;
+            }
+            
+            @media (max-width: 768px) {
+                .profile-container {
+                    grid-template-columns: 1fr;
+                }
+                
+                .info-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+
+</head>
+<body class="container">
+
+    <div class="nav-bar">
+        <div class="nav-content">
+            <h2 class="section-title">Onboarding - Complete Your Profile</h2>
+        </div>
+    </div>
+
+    <form id="onboardingForm" class="profile-container" method="POST" action="{% url 'onboarding' %}" enctype="multipart/form-data" onsubmit="return validateForm()">
+        {% csrf_token %}
+
+        <!-- ✅ Profile Section -->
+        <div class="profile-section">
+            <h3 class="section-title">Profile Information</h3>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <label class="info-label" for="name">Full Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <span class="error" id="nameError"></span>
+                </div>
+
+                <div class="info-item">
+                    <label class="info-label" for="age">Age:</label>
+                    <input type="number" id="age" name="age" min="18" max="100" required>
+                    <span class="error" id="ageError"></span>
+                </div>
+
+                <div class="info-item">
+                    <label class="info-label" for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label class="info-label" for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" maxlength="10" required>
+                    <span class="error" id="phoneError"></span>
+                </div>
+
+                <div class="info-item">
+                    <label class="info-label" for="profession">Profession:</label>
+                    <select id="profession" name="profession" required>
+                        <option value="">-- Select Profession --</option>
+                        <option value="Businessman">Businessman</option>
+                        <option value="Employee">Employee</option>
+                        <option value="Student">Student</option>
+                        <option value="Housewife">Housewife</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="info-item">
+                    <label class="info-label" for="profile_photo">Profile Photo (Optional):</label>
+                    <input type="file" id="profile_photo" name="profile_photo" accept="image/*">
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ Bank Account Section -->
+        <div class="profile-section">
+            <h3 class="section-title">Bank Account Details</h3>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <label class="info-label" for="account_name">Account Name:</label>
+                    <input type="text" id="account_name" name="account_name" required>
+                </div>
+
+                <div class="info-item">
+                    <label class="info-label" for="account_type">Account Type:</label>
+                    <select id="account_type" name="account_type" required>
+                        <option value="">-- Select Account Type --</option>
+                        <option value="Current">Current</option>
+                        <option value="Savings">Savings</option>
+                    </select>
+                </div>
+
+                <div class="info-item">
+                    <label class="info-label" for="current_balance">Current Balance (₹):</label>
+                    <input type="number" id="current_balance" name="current_balance" min="0" step="0.01" placeholder="Or enter 0 to let us detect it" required>
+                    <span class="error" id="balanceError"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ Monthly Budget Section -->
+        <div class="profile-section">
+            <h3 class="section-title">Monthly Budget</h3>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <label class="info-label" for="monthly_budget">Set Your Monthly Budget (₹):</label>
+                    <input type="number" id="monthly_budget" name="monthly_budget" min="1000" step="0.01" required>
+                    <span class="error" id="budgetError"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </form>
+
+    <script>
+        function validateForm() {
+            let valid = true;
+
+            // ✅ Validate Name (No numbers or special characters)
+            let name = document.getElementById("name").value;
+            let nameError = document.getElementById("nameError");
+            if (!/^[a-zA-Z\s]+$/.test(name)) {
+                nameError.textContent = "Name should only contain letters and spaces.";
+                valid = false;
+            } else {
+                nameError.textContent = "";
+            }
+
+            // ✅ Validate Age (18-100)
+            let age = document.getElementById("age").value;
+            let ageError = document.getElementById("ageError");
+            if (age < 18 || age > 100) {
+                ageError.textContent = "Age must be between 18 and 100.";
+                valid = false;
+            } else {
+                ageError.textContent = "";
+            }
+
+            // ✅ Validate Phone Number (10 digits)
+            let phone = document.getElementById("phone").value;
+            let phoneError = document.getElementById("phoneError");
+            if (!/^\d{10}$/.test(phone)) {
+                phoneError.textContent = "Phone number must be exactly 10 digits.";
+                valid = false;
+            } else {
+                phoneError.textContent = "";
+            }
+
+            // ✅ Validate Current Balance (No negative values)
+            let balance = document.getElementById("current_balance").value;
+            let balanceError = document.getElementById("balanceError");
+            if (balance < 0) {
+                balanceError.textContent = "Balance cannot be negative.";
+                valid = false;
+            } else {
+                balanceError.textContent = "";
+            }
+
+            // ✅ Validate Monthly Budget (Min ₹1000)
+            let budget = document.getElementById("monthly_budget").value;
+            let budgetError = document.getElementById("budgetError");
+            if (budget < 1000) {
+                budgetError.textContent = "Budget must be at least ₹1000.";
+                valid = false;
+            } else {
+                budgetError.textContent = "";
+            }
+
+            return valid;
+        }
+    </script>
+
+</body>
+</html>

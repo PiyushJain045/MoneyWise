@@ -1,0 +1,15 @@
+django
+pandas 
+numpy 
+matplotlib 
+seaborn 
+google-generativeai
+django-allauth
+scikit-learn
+celery
+redis
+dotenv
+ipykernel
+twilio
+bentoml==1.0.25
+openpyxl

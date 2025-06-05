@@ -1,0 +1,579 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investments Portfolio | Finance Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #3f37c9;
+      --success: #4cc9f0;
+      --danger: #f72585;
+      --warning: #f8961e;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+      --border-radius: 10px;
+      --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f7fb;
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header Styles */
+    .header {
+      margin-bottom: 2.5rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Navigation Link */
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      font-weight: 500;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 1rem;
+    }
+
+    .nav-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+    }
+
+    /* Button Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      box-shadow: var(--box-shadow);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    /* Card Styles */
+    .card-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .card .label {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+    }
+
+    .card h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    .card .change {
+      font-size: 0.9rem;
+      color: #4cc9f0;
+      font-weight: 500;
+    }
+
+    /* Two Column Layout */
+    .two-column-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Allocation Section */
+    .allocation {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+      margin-bottom: 0;
+    }
+
+    .allocation h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    .allocation p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .allocation-chart {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .chart-container {
+      flex: 1;
+      min-width: 250px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .legend {
+      flex: 1;
+      min-width: 250px;
+      list-style: none;
+    }
+
+    .legend li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    /* Form Styles */
+    .form-container {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+      margin-top: 0;
+    }
+
+    .form-container h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    /* Popup Styles */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+    
+    .popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .popup-form {
+      background: white;
+      width: 90%;
+      max-width: 500px;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transform: translateY(-50px);
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    .popup-overlay.active .popup-form {
+      transform: translateY(0);
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--light-gray);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .close-btn:hover {
+      background: var(--gray);
+      color: white;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .two-column-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .allocation-chart {
+        flex-direction: column;
+      }
+      
+      .chart-container {
+        margin-bottom: 1.5rem;
+      }
+    }
+
+    {% comment %} chart allocation {% endcomment %}
+
+    .legend {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    
+    .legend-bullet {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    
+    .legend-label {
+      font-weight: 500;
+      color: var(--dark);
+      margin-right: 8px;
+      min-width: 100px;
+    }
+    
+    .legend-value {
+      font-weight: 600;
+      color: var(--dark);
+      margin-left: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-chart-line"></i> Investments Portfolio</h1>
+      <a href="{% url 'st_homepage' %}" class="nav-link">
+        <i class="fas fa-arrow-right"></i> Go to Stock Tracker
+      </a>
+      <p>Track and analyze your investment portfolio performance</p>
+      <button onclick="toggleForm()" class="btn">
+        <i class="fas fa-plus"></i> Add Investment
+      </button>
+    </div>
+  
+    <div class="card-row">
+      <div class="card">
+        <p class="label">Total Portfolio Value</p>
+        <h2>₹{{ total_value|floatformat:0 }}</h2>
+        <span class="change"><i class="fas fa-arrow-up"></i> +3.9% from last month</span>
+      </div>
+
+      <div class="card">
+        <p class="label">Todays Gold price</p>
+        <h2>₹8982.81<h2>
+        <span class="change"> 22 Carat/gram</span>
+      </div>
+
+      <div class="card">
+        <p class="label">NIFTY 50</p>
+        <h2>23,437.20<h2>
+        <span class="change" style="color: green;"> +108.65 (0.47%) <i class="fas fa-arrow-up"></i> today</span>
+      </div>
+    </div>
+  
+    {% if has_data %}
+    <div class="two-column-section">
+      <div class="allocation">
+        <h3><i class="fas fa-pie-chart"></i> Asset Allocation</h3>
+        <p>Breakdown of your investment portfolio composition</p>
+        
+        <div class="allocation-chart">
+          <span class="chart-container">
+            <canvas id="pieChart"></canvas>
+          </span>
+          <ul class="legend">
+            {% for item in formatted_data %}
+              <li class="legend-item">
+                <span class="legend-bullet" style="background-color: {{ item.color }};"></span>
+                <span class="legend-label">{{ item.label }}</span>
+                <span class="legend-value">{{ item.percent }}% ({{ item.formatted_value }})</span>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+    {% else %}
+      <div class="card">
+        <p style="text-align: center; font-style: italic; color: var(--gray);">
+          <i class="fas fa-info-circle"></i> No investments added yet. Upload a statement or add an investment manually to see your portfolio breakdown.
+        </p>
+      </div>
+    {% endif %}
+
+    <div class="form-container">
+      <h3><i class="fas fa-file-upload"></i> Upload Investment Statement</h3>
+      <form method="POST" action="{% url 'investment' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label>Statement Type</label>
+          <select name="statement_type" required>
+            <option value="">Select Statement Type</option>
+            <option value="Stocks">Stocks</option>
+            <option value="Mutual Funds">Mutual Funds</option>
+            <option value="Bonds">Bonds</option>
+            <option value="Crypto">Cryptocurrency</option>
+          </select>
+        </div>
+      
+        <div class="form-group">
+          <label>Broker/Platform</label>
+          <select name="broker" required>
+            <option value="">Select Broker</option>
+            <option value="GROWW">GROWW</option>
+            <option value="Zerodha">Zerodha</option>
+            <option value="Upstox">Upstox</option>
+            <option value="CoinDCX">CoinDCX</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      
+        <div class="form-group">
+          <label>Statement File</label>
+          <input type="file" name="statement_file" accept=".xlsx,.csv,.pdf" required>
+        </div>
+      
+        <button type="submit" class="btn">
+          <i class="fas fa-upload"></i> Upload Statement
+        </button>
+      </form>
+    </div>
+  </div>
+
+    <!-- Popup Investment Form -->
+    <div id="popupOverlay" class="popup-overlay">
+      <div class="popup-form">
+        <button class="close-btn" onclick="toggleForm()">×</button>
+        <form id="investmentForm" method="POST" action="{% url 'investment' %}">
+          {% csrf_token %}
+          <h3><i class="fas fa-plus-circle"></i> Add New Investment</h3>
+          
+          <div class="form-group">
+            <label>Investment Type</label>
+            <select name="investment_type" required>
+              <option value="">Select Investment Type</option>
+              <option value="Stocks">Stocks</option>
+              <option value="Bonds">Bonds</option>
+              <option value="Real Estate">Real Estate</option>
+              <option value="Crypto">Cryptocurrency</option>
+              <option value="Gold">Gold</option>
+              <option value="Mutual Funds">Mutual Funds</option>
+              <option value="Money Market">Money Market</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Amount (₹)</label>
+            <input type="number" step="1" name="amount" placeholder="Enter amount" required>
+          </div>
+
+          <div class="form-group">
+            <label>Investment Date</label>
+            <input type="date" name="date" required>
+          </div>
+
+          <button type="submit" class="btn">
+            <i class="fas fa-check"></i> Add Investment
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Chart initialization
+    const ctx = document.getElementById('pieChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          data: {{ values|safe }},
+          backgroundColor: {{ colors|safe }},
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `${context.label}: ₹${context.raw}`;
+              }
+            }
+          }
+        },
+        hover: {
+          mode: 'nearest',
+          intersect: true
+        }
+      }
+    });
+
+    // Toggle popup form
+    function toggleForm() {
+      const popup = document.getElementById('popupOverlay');
+      popup.classList.toggle('active');
+      
+      // Close when clicking outside the form
+      popup.addEventListener('click', function(e) {
+        if (e.target === popup) {
+          popup.classList.remove('active');
+        }
+      });
+    }
+
+    // Close with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.getElementById('popupOverlay').classList.remove('active');
+      }
+    });
+
+    // Set today's date as default for date input
+    document.querySelector('input[type="date"]').valueAsDate = new Date();
+  </script>
+
+</body>
+</html>

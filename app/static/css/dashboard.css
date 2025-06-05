@@ -1,0 +1,594 @@
+/* General Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* Navigation Links */
+.nav-link {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 1em;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.5em;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 2em;
+    font-weight: 600;
+    border-bottom: 2px solid #6a11cb;
+    padding-bottom: 10px;
+    margin-top: 30px;
+}
+
+h4 {
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #6a11cb;
+}
+
+/* Financial Overview */
+p {
+    font-size: 1.1em;
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+p strong {
+    color: #6a11cb;
+}
+
+/* Graphs */
+img {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+img:hover {
+    transform: scale(1.02);
+}
+
+/* Form Styling */
+form {
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+select, button {
+    width: 20%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 25px;
+    font-size: 1em;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+select:hover, button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    font-weight: 600;
+}
+
+tr:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Success and Error Messages */
+.success {
+    color: #28a745;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(40, 167, 69, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.error {
+    color: #dc3545;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(220, 53, 69, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    h4 {
+        font-size: 1.2em;
+    }
+
+    .nav-link {
+        display: block;
+        margin: 10px 0;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    select, button {
+        font-size: 0.9em;
+    }
+}
+
+/* Form Container */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Group (Label + Dropdown) */
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Labels */
+.filter-form label {
+    font-size: 1em;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+/* Dropdowns */
+.form-select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 1em;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-select:hover {
+    border-color: #6a11cb;
+    box-shadow: 0 0 8px rgba(106, 17, 203, 0.2);
+}
+
+/* Button */
+.form-button {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-select, .form-button {
+        width: 100%;
+    }
+}
+
+/* *********************************** */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between elements */
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Adjust as needed */
+    margin: 0 auto; /* Center the form */
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between label and dropdown */
+}
+
+label {
+    font-weight: 500;
+    color: #555;
+    white-space: nowrap; /* Prevent label from wrapping */
+}
+
+.form-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+    transition: border-color 0.3s ease;
+}
+
+.form-select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-button {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent button text from wrapping */
+}
+
+.form-button:hover {
+    background-color: #0056b3;
+}
+
+/* ****************************** */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between elements */
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Adjust as needed */
+    margin: 0 auto; /* Center the form */
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between label and dropdown */
+}
+
+label {
+    font-weight: 500;
+    color: #555;
+    white-space: nowrap; /* Prevent label from wrapping */
+}
+
+.form-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+    transition: border-color 0.3s ease;
+    min-width: 120px; /* Ensure dropdowns have a minimum width */
+}
+
+.form-select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-button {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent button text from wrapping */
+}
+
+.form-button:hover {
+    background-color: #0056b3;
+}
+
+/* Spending Trend Section */
+.graph-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    margin-bottom: 30px;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.graph-section:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.graph-section h2 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.graph-container {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px;
+}
+
+.graph-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.no-data-message {
+    color: #7f8c8d;
+    font-size: 1rem;
+    text-align: center;
+    padding: 40px 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+/* Time filter buttons (if you add them) */
+.time-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.time-filter-btn {
+    background: #f5f7fa;
+    border: 1px solid #e0e3e9;
+    color: #4a5568;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-filter-btn:hover {
+    background: #edf2f7;
+}
+
+.time-filter-btn.active {
+    background: #4C72B0;
+    color: white;
+    border-color: #4C72B0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .graph-section {
+        padding: 18px;
+    }
+    
+    .graph-section h2 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Graph Container Styles */
+.finance-graph-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+}
+
+.finance-graph-container h2 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.responsive-graph {
+    width: 100%;
+    height: auto;
+    max-width: 600px;  /* Control maximum size */
+    display: block;
+    margin: 0 auto;
+    border-radius: 6px;
+}
+
+.no-data-message {
+    color: #95a5a6;
+    text-align: center;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 6px;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+    .finance-graph-container {
+        padding: 15px;
+    }
+    
+    .responsive-graph {
+        max-width: 100%;
+    }
+}
+
+/* Financial News Section Styles */
+.news-section {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.news-section h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.news-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.news-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.news-title {
+    color: #3498db;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    line-height: 1.4;
+}
+
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.85em;
+    color: #7f8c8d;
+}
+
+.news-excerpt {
+    color: #34495e;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.news-link {
+    color: #e74c3c;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.news-link:hover {
+    color: #c0392b;
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .news-container {
+        grid-template-columns: 1fr;
+    }
+}
