@@ -152,6 +152,6 @@ import os
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-CSRF_TRUSTED_ORIGINS = ['https://moneywise.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://moneywise-ndld.onrender.com']
 
 
